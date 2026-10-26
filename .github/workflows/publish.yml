@@ -74,5 +74,5 @@ jobs:
       - name: Publish
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          repository-url: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'testpypi' && 'https://test.pypi.org/legacy/' || 'https://pypi.org/legacy/' }}
+          repository-url: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'testpypi' && 'https://test.pypi.org/legacy/' || 'https://upload.pypi.org/legacy/' }}
           print-hash: true
