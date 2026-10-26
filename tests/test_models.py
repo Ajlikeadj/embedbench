@@ -328,7 +328,29 @@ def test_ollama_model_embeds_and_validates(monkeypatch: pytest.MonkeyPatch) -> N
 # ---------------------------------------------------------------------------
 
 
+def install_fake_torch(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Provide a CPU-only ``torch`` stand-in so HF tests do not need PyTorch.
+
+    The Hugging Face provider imports ``torch`` for device selection, VRAM
+    metadata and cache cleanup. CI installs the package without the ``local``
+    extra, so the tests inject this module instead of downloading PyTorch.
+    """
+
+    torch = types.ModuleType("torch")
+    torch.__version__ = "0.0.0+fake"  # type: ignore[attr-defined]
+    torch.cuda = types.SimpleNamespace(  # type: ignore[attr-defined]
+        is_available=lambda: False,
+        empty_cache=lambda: None,
+    )
+    torch.backends = types.SimpleNamespace(  # type: ignore[attr-defined]
+        mps=types.SimpleNamespace(is_available=lambda: False)
+    )
+    monkeypatch.setitem(sys.modules, "torch", torch)
+
+
 def test_hf_model_with_mocked_sentence_transformers(monkeypatch: pytest.MonkeyPatch) -> None:
+    install_fake_torch(monkeypatch)
+
     class FakeTokenizer:
         def __call__(self, batch: list[str], **kwargs: Any) -> dict[str, list[list[int]]]:
             max_length = kwargs.get("max_length") or 10_000
@@ -376,6 +398,14 @@ def test_hf_model_with_mocked_sentence_transformers(monkeypatch: pytest.MonkeyPa
     assert count.tokens == 6
     assert count.estimated is False
     assert count.method.startswith("tokenizer:")
+
+
+def test_hf_model_reports_missing_extra(monkeypatch: pytest.MonkeyPatch) -> None:
+    install_fake_torch(monkeypatch)
+    monkeypatch.setitem(sys.modules, "sentence_transformers", None)
+    model = SentenceTransformerEmbeddingModel("fake/model", {"device": "cpu"})
+    with pytest.raises(BackendError, match=r"embedbench\[local\]"):
+        model.load()
 
 
 def test_hf_e5_prefixes_are_applied_by_default() -> None:
