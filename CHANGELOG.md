@@ -6,6 +6,16 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Trusted-publishing workflow (`.github/workflows/publish.yml`) and a step-by-step
+  [PUBLISHING.md](PUBLISHING.md) guide for TestPyPI and PyPI releases.
+
+### Fixed
+
+- Package metadata now points `Homepage`, `Documentation`, `Issues` and `Repository` at
+  the real repository instead of placeholder URLs.
+
 ## [0.2.0] — 2026-10-26
 
 ### Added

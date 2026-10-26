@@ -84,10 +84,10 @@ dev = [
 embedbench = "embedbench.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/embedbench/embedbench"
-Documentation = "https://github.com/embedbench/embedbench#readme"
-Issues = "https://github.com/embedbench/embedbench/issues"
-Repository = "https://github.com/embedbench/embedbench"
+Homepage = "https://github.com/Ajlikeadj/embedbench"
+Documentation = "https://github.com/Ajlikeadj/embedbench#readme"
+Issues = "https://github.com/Ajlikeadj/embedbench/issues"
+Repository = "https://github.com/Ajlikeadj/embedbench"
 
 [tool.hatch.version]
 path = "src/embedbench/__init__.py"

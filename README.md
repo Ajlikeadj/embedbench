@@ -1218,6 +1218,9 @@ The suite runs offline:
 No Ollama server, cloud key or Hugging Face download is required for the tests; the fake
 hashing provider exercises the real cache, FAISS, metrics and report pipeline.
 
+Release and PyPI publishing steps (trusted publishing, TestPyPI dry runs, manual `twine`
+uploads) live in [PUBLISHING.md](PUBLISHING.md).
+
 ---
 
 ## Known limitations
