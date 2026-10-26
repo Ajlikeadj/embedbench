@@ -1,0 +1,1848 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-10-26T03:47:10+00:00",
+  "tool": {
+    "name": "embedbench",
+    "version": "0.1.0"
+  },
+  "config": {
+    "docs": "examples\\docs",
+    "models": [
+      "hf:BAAI/bge-small-en-v1.5",
+      "hf:all-MiniLM-L6-v2"
+    ],
+    "top_k": 5,
+    "seed": 42,
+    "output_dir": "examples\\results_repro",
+    "plugins": [],
+    "chunking": {
+      "strategy": "recursive",
+      "chunk_size": 600,
+      "chunk_overlap": 100,
+      "min_chunk_chars": 80
+    },
+    "ingestion": {
+      "extensions": [
+        ".txt",
+        ".md",
+        ".pdf",
+        ".docx",
+        ".html"
+      ],
+      "recursive": true,
+      "max_file_bytes": 20000000,
+      "skip_dirs": [
+        ".git",
+        ".hg",
+        ".svn",
+        ".venv",
+        "venv",
+        "node_modules",
+        "__pycache__",
+        ".embedbench_cache"
+      ]
+    },
+    "evalset": {
+      "path": "examples\\evalset.jsonl",
+      "auto_generate": false,
+      "ollama_model": "llama3.2",
+      "questions_per_chunk": 1,
+      "max_chunks": 30,
+      "min_chunk_chars": 120,
+      "min_question_words": 5,
+      "max_question_words": 40,
+      "dedupe_threshold": 0.85,
+      "max_generation_attempts": 2,
+      "temperature": 0.0,
+      "num_predict": 220,
+      "request_timeout_s": 180.0
+    },
+    "backends": {
+      "ollama": {
+        "batch_size": 16,
+        "query_prefix": null,
+        "document_prefix": null,
+        "timeout_s": 120.0,
+        "max_retries": 3,
+        "retry_backoff_s": 0.75,
+        "host": "http://localhost:11434",
+        "keep_alive": null
+      },
+      "hf": {
+        "batch_size": 32,
+        "query_prefix": null,
+        "document_prefix": null,
+        "device": "auto",
+        "trust_remote_code": false,
+        "cache_folder": null,
+        "local_files_only": false,
+        "max_seq_length": 512
+      },
+      "extra": {}
+    },
+    "cache": {
+      "enabled": true,
+      "dir": ".embedbench_cache"
+    },
+    "report": {
+      "title": "Embedding models for the Helio knowledge base",
+      "priority": "balanced",
+      "cost_per_1m_tokens": 0.02
+    }
+  },
+  "run": {
+    "seed": 42,
+    "top_k": 5,
+    "priority": "balanced",
+    "docs_dir": "examples\\docs",
+    "output_dir": "examples\\results_repro",
+    "models_requested": [
+      "hf:BAAI/bge-small-en-v1.5",
+      "hf:all-MiniLM-L6-v2"
+    ],
+    "successful_models": 2,
+    "failed_models": 0,
+    "total_seconds": 34.089,
+    "environment": {
+      "captured_at": "2026-10-26T03:47:10+00:00",
+      "python": "3.14.6",
+      "python_implementation": "CPython",
+      "platform": "Windows-11-10.0.26300-SP0",
+      "machine": "AMD64",
+      "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+      "cpu_count": 16,
+      "total_ram_gb": 23.64,
+      "cwd": "C:\\Users\\adity\\OneDrive\\Desktop\\alpha",
+      "packages": {
+        "embedbench": "0.1.0",
+        "numpy": "2.5.4",
+        "faiss-cpu": "1.15.1",
+        "sentence-transformers": "6.2.0",
+        "torch": "2.14.1",
+        "pydantic": "2.14.1"
+      }
+    },
+    "corpus": {
+      "documents": 6,
+      "chunks": 19,
+      "chars": 8467,
+      "avg_chunk_chars": 463.21,
+      "median_chunk_chars": 483.0,
+      "min_chunk_chars": 266,
+      "max_chunk_chars": 576,
+      "documents_detail": [
+        {
+          "doc_id": "api.md",
+          "path": "C:\\Users\\adity\\OneDrive\\Desktop\\alpha\\examples\\docs\\api.md",
+          "source_type": "markdown",
+          "title": "Fleet API essentials",
+          "chars": 1497,
+          "metadata": {
+            "size_bytes": 1498,
+            "extension": ".md"
+          }
+        },
+        {
+          "doc_id": "billing.md",
+          "path": "C:\\Users\\adity\\OneDrive\\Desktop\\alpha\\examples\\docs\\billing.md",
+          "source_type": "markdown",
+          "title": "Plans, billing and refunds",
+          "chars": 1312,
+          "metadata": {
+            "size_bytes": 1315,
+            "extension": ".md"
+          }
+        },
+        {
+          "doc_id": "installation.md",
+          "path": "C:\\Users\\adity\\OneDrive\\Desktop\\alpha\\examples\\docs\\installation.md",
+          "source_type": "markdown",
+          "title": "Installing the Lumen Agent",
+          "chars": 1378,
+          "metadata": {
+            "size_bytes": 1382,
+            "extension": ".md"
+          }
+        },
+        {
+          "doc_id": "overview.md",
+          "path": "C:\\Users\\adity\\OneDrive\\Desktop\\alpha\\examples\\docs\\overview.md",
+          "source_type": "markdown",
+          "title": "Lumen Fleet Platform Overview",
+          "chars": 1369,
+          "metadata": {
+            "size_bytes": 1370,
+            "extension": ".md"
+          }
+        },
+        {
+          "doc_id": "security.html",
+          "path": "C:\\Users\\adity\\OneDrive\\Desktop\\alpha\\examples\\docs\\security.html",
+          "source_type": "html",
+          "title": "Lumen Security and Compliance",
+          "chars": 1402,
+          "metadata": {
+            "format": "html",
+            "size_bytes": 1779,
+            "extension": ".html"
+          }
+        },
+        {
+          "doc_id": "troubleshooting.txt",
+          "path": "C:\\Users\\adity\\OneDrive\\Desktop\\alpha\\examples\\docs\\troubleshooting.txt",
+          "source_type": "text",
+          "title": null,
+          "chars": 1509,
+          "metadata": {
+            "size_bytes": 1520,
+            "extension": ".txt"
+          }
+        }
+      ],
+      "skipped_files": [],
+      "ingest_seconds": 0.011,
+      "chunk_seconds": 0.0014,
+      "prep_seconds": 0.0249,
+      "chunking": {
+        "strategy": "recursive",
+        "chunk_size": 600,
+        "chunk_overlap": 100,
+        "min_chunk_chars": 80
+      },
+      "queries": 12,
+      "avg_query_words": 10.92
+    },
+    "evalset": {
+      "source": "jsonl",
+      "path": "examples\\evalset.jsonl",
+      "queries": 12,
+      "generation": null,
+      "examples": [
+        {
+          "query_id": "q001",
+          "query": "What is the maximum payload size for a single telemetry event?",
+          "relevant_doc_ids": [
+            "api.md"
+          ],
+          "answer": "5 MB after compression."
+        },
+        {
+          "query_id": "q002",
+          "query": "Which Helio robot firmware versions are supported by Lumen Fleet 3.2?",
+          "relevant_doc_ids": [
+            "overview.md"
+          ],
+          "answer": "R2 firmware 4.0+, R3 firmware 4.2+, and R4 firmware 5.1+."
+        },
+        {
+          "query_id": "q003",
+          "query": "How can an operator rotate an API key without interrupting telemetry ingestion?",
+          "relevant_doc_ids": [
+            "security.html"
+          ],
+          "answer": "Rotation creates a second active key and the previous key remains valid for 24 hours."
+        },
+        {
+          "query_id": "q004",
+          "query": "What happens when a Growth plan team goes over its included two million API calls?",
+          "relevant_doc_ids": [
+            "billing.md"
+          ],
+          "answer": "Extra calls are billed at $0.40 per additional 1,000 API calls."
+        },
+        {
+          "query_id": "q005",
+          "query": "How long are raw telemetry records retained for enterprise customers?",
+          "relevant_doc_ids": [
+            "security.html"
+          ],
+          "answer": "365 days by default, configurable up to three years."
+        },
+        {
+          "query_id": "q006",
+          "query": "Which environment variables configure the Lumen Agent's API endpoint and token?",
+          "relevant_doc_ids": [
+            "installation.md"
+          ],
+          "answer": "LUMEN_API_URL and LUMEN_API_TOKEN."
+        },
+        {
+          "query_id": "q007",
+          "query": "What does the AGENT-401 error mean and what should I check first?",
+          "relevant_doc_ids": [
+            "troubleshooting.txt"
+          ],
+          "answer": "It is an unauthorized token error; check host clock drift first."
+        },
+        {
+          "query_id": "q008",
+          "query": "Can an annual Lumen subscription be refunded after thirty days?",
+          "relevant_doc_ids": [
+            "billing.md"
+          ],
+          "answer": "No; annual plans are only refundable pro-rata within 30 days of purchase."
+        },
+        {
+          "query_id": "q009",
+          "query": "Which HTTP headers tell a client that it has been rate limited?",
+          "relevant_doc_ids": [
+            "api.md"
+          ],
+          "answer": "Retry-After plus X-RateLimit-Limit, X-RateLimit-Remaining, and X-RateLimit-Reset."
+        },
+        {
+          "query_id": "q010",
+          "query": "What TCP ports are required for a self-hosted on-premises gateway?",
+          "relevant_doc_ids": [
+            "installation.md"
+          ],
+          "answer": "Inbound 443 for the admin UI, 8443 for telemetry, and 8787 for agent health."
+        },
+        {
+          "query_id": "q011",
+          "query": "Does Lumen support single sign-on with Okta?",
+          "relevant_doc_ids": [
+            "security.html"
+          ],
+          "answer": "Yes, via SAML 2.0 or OpenID Connect on Enterprise plans."
+        },
+        {
+          "query_id": "q012",
+          "query": "How many robots can be monitored on the Growth plan?",
+          "relevant_doc_ids": [
+            "billing.md"
+          ],
+          "answer": "Up to 50 robots."
+        }
+      ]
+    },
+    "price_per_1m_tokens": 0.02
+  },
+  "models": [
+    {
+      "spec": "hf:BAAI/bge-small-en-v1.5",
+      "backend": "hf",
+      "model": "BAAI/bge-small-en-v1.5",
+      "status": "ok",
+      "error": null,
+      "metrics_k": 5,
+      "accuracy": {
+        "n_queries": 12,
+        "recall": 1.0,
+        "precision": 0.20000000000000004,
+        "mrr": 0.9583333333333334,
+        "ndcg": 0.9692441461309548,
+        "hit_rate": 1.0
+      },
+      "latency_ms": {
+        "count": 12,
+        "mean_ms": 19.371,
+        "min_ms": 11.366,
+        "max_ms": 95.667,
+        "p50_ms": 12.084,
+        "p95_ms": 51.825,
+        "p99_ms": 86.899,
+        "cold_query_ms": 95.667,
+        "warm_p50_ms": 11.976,
+        "warm_p95_ms": 14.83,
+        "warm_p99_ms": 15.729,
+        "queries_per_second": 51.624
+      },
+      "timing": {
+        "model_load_ms": 32113.612,
+        "embedding_seconds": 0.0,
+        "indexing_seconds": 0.047,
+        "batches": 0,
+        "embedded_chunks": 0,
+        "cached_chunks": 19,
+        "cold_embed_ms": null,
+        "warm_batch_p50_ms": null,
+        "warm_batch_p95_ms": null,
+        "warm_batch_p99_ms": null,
+        "index_build_ms": 43.94,
+        "total_seconds": 32.4135
+      },
+      "throughput": {
+        "chunks_per_second": 403.91,
+        "embed_chunks_per_second": null,
+        "queries_per_second": 51.624
+      },
+      "tokens": {
+        "index_tokens": 2261,
+        "query_tokens": 202,
+        "total_tokens": 2463,
+        "estimated": false,
+        "method": "tokenizer:BertTokenizer, truncated to 512",
+        "cost_usd": 4.9e-05,
+        "price_per_1m_tokens": 0.02
+      },
+      "index": {
+        "backend": "faiss",
+        "dimension": 384,
+        "vectors": 19,
+        "disk_size_bytes": 29229,
+        "disk_size_mb": 0.028
+      },
+      "cache": {
+        "enabled": true,
+        "hits": 19,
+        "misses": 0,
+        "hit_rate": 1.0
+      },
+      "resources": {
+        "ram_baseline_mb": 66.95,
+        "ram_peak_mb": 600.69,
+        "ram_delta_mb": 533.74,
+        "ram_sampling_interval_s": 0.05,
+        "ram_sampling_error": null,
+        "provider": "sentence-transformers",
+        "device": "cpu",
+        "requested_device": "auto",
+        "torch_version": "2.14.1+cpu",
+        "sentencetransformer_max_seq_length": 512,
+        "peak_vram_mb": null,
+        "vram_measurement": null,
+        "model_resident_mb": null
+      },
+      "per_query": [
+        {
+          "query_id": "q001",
+          "query": "What is the maximum payload size for a single telemetry event?",
+          "relevant_doc_ids": [
+            "api.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "api.md#0000",
+              "doc_id": "api.md",
+              "score": 0.740371
+            },
+            {
+              "rank": 2,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.670766
+            },
+            {
+              "rank": 3,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.66161
+            },
+            {
+              "rank": 4,
+              "chunk_id": "security.html#0001",
+              "doc_id": "security.html",
+              "score": 0.639536
+            },
+            {
+              "rank": 5,
+              "chunk_id": "billing.md#0001",
+              "doc_id": "billing.md",
+              "score": 0.638271
+            }
+          ],
+          "ranked_doc_ids": [
+            "api.md",
+            "troubleshooting.txt",
+            "security.html",
+            "billing.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 95.667,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q002",
+          "query": "Which Helio robot firmware versions are supported by Lumen Fleet 3.2?",
+          "relevant_doc_ids": [
+            "overview.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "overview.md#0001",
+              "doc_id": "overview.md",
+              "score": 0.819512
+            },
+            {
+              "rank": 2,
+              "chunk_id": "overview.md#0000",
+              "doc_id": "overview.md",
+              "score": 0.783814
+            },
+            {
+              "rank": 3,
+              "chunk_id": "overview.md#0002",
+              "doc_id": "overview.md",
+              "score": 0.749592
+            },
+            {
+              "rank": 4,
+              "chunk_id": "installation.md#0000",
+              "doc_id": "installation.md",
+              "score": 0.701974
+            },
+            {
+              "rank": 5,
+              "chunk_id": "billing.md#0000",
+              "doc_id": "billing.md",
+              "score": 0.687664
+            }
+          ],
+          "ranked_doc_ids": [
+            "overview.md",
+            "installation.md",
+            "billing.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 13.706,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q003",
+          "query": "How can an operator rotate an API key without interrupting telemetry ingestion?",
+          "relevant_doc_ids": [
+            "security.html"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "security.html#0002",
+              "doc_id": "security.html",
+              "score": 0.741777
+            },
+            {
+              "rank": 2,
+              "chunk_id": "api.md#0002",
+              "doc_id": "api.md",
+              "score": 0.679157
+            },
+            {
+              "rank": 3,
+              "chunk_id": "troubleshooting.txt#0001",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.65441
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0000",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.645683
+            },
+            {
+              "rank": 5,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.641643
+            }
+          ],
+          "ranked_doc_ids": [
+            "security.html",
+            "api.md",
+            "troubleshooting.txt"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 12.354,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q004",
+          "query": "What happens when a Growth plan team goes over its included two million API calls?",
+          "relevant_doc_ids": [
+            "billing.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "billing.md#0001",
+              "doc_id": "billing.md",
+              "score": 0.732309
+            },
+            {
+              "rank": 2,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.719629
+            },
+            {
+              "rank": 3,
+              "chunk_id": "security.html#0001",
+              "doc_id": "security.html",
+              "score": 0.630916
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.623132
+            },
+            {
+              "rank": 5,
+              "chunk_id": "billing.md#0000",
+              "doc_id": "billing.md",
+              "score": 0.60636
+            }
+          ],
+          "ranked_doc_ids": [
+            "billing.md",
+            "api.md",
+            "security.html",
+            "troubleshooting.txt"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 12.192,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q005",
+          "query": "How long are raw telemetry records retained for enterprise customers?",
+          "relevant_doc_ids": [
+            "security.html"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "security.html#0001",
+              "doc_id": "security.html",
+              "score": 0.804555
+            },
+            {
+              "rank": 2,
+              "chunk_id": "security.html#0002",
+              "doc_id": "security.html",
+              "score": 0.657352
+            },
+            {
+              "rank": 3,
+              "chunk_id": "billing.md#0001",
+              "doc_id": "billing.md",
+              "score": 0.649675
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.641676
+            },
+            {
+              "rank": 5,
+              "chunk_id": "api.md#0002",
+              "doc_id": "api.md",
+              "score": 0.628209
+            }
+          ],
+          "ranked_doc_ids": [
+            "security.html",
+            "billing.md",
+            "troubleshooting.txt",
+            "api.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 11.734,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q006",
+          "query": "Which environment variables configure the Lumen Agent's API endpoint and token?",
+          "relevant_doc_ids": [
+            "installation.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "installation.md#0001",
+              "doc_id": "installation.md",
+              "score": 0.897992
+            },
+            {
+              "rank": 2,
+              "chunk_id": "installation.md#0000",
+              "doc_id": "installation.md",
+              "score": 0.764962
+            },
+            {
+              "rank": 3,
+              "chunk_id": "installation.md#0002",
+              "doc_id": "installation.md",
+              "score": 0.764333
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0000",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.763986
+            },
+            {
+              "rank": 5,
+              "chunk_id": "overview.md#0002",
+              "doc_id": "overview.md",
+              "score": 0.731288
+            }
+          ],
+          "ranked_doc_ids": [
+            "installation.md",
+            "troubleshooting.txt",
+            "overview.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 12.752,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q007",
+          "query": "What does the AGENT-401 error mean and what should I check first?",
+          "relevant_doc_ids": [
+            "troubleshooting.txt"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "troubleshooting.txt#0000",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.767267
+            },
+            {
+              "rank": 2,
+              "chunk_id": "installation.md#0001",
+              "doc_id": "installation.md",
+              "score": 0.713093
+            },
+            {
+              "rank": 3,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.70312
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0001",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.696055
+            },
+            {
+              "rank": 5,
+              "chunk_id": "api.md#0002",
+              "doc_id": "api.md",
+              "score": 0.691898
+            }
+          ],
+          "ranked_doc_ids": [
+            "troubleshooting.txt",
+            "installation.md",
+            "api.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 15.954,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q008",
+          "query": "Can an annual Lumen subscription be refunded after thirty days?",
+          "relevant_doc_ids": [
+            "billing.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "billing.md#0002",
+              "doc_id": "billing.md",
+              "score": 0.768286
+            },
+            {
+              "rank": 2,
+              "chunk_id": "billing.md#0000",
+              "doc_id": "billing.md",
+              "score": 0.715806
+            },
+            {
+              "rank": 3,
+              "chunk_id": "security.html#0002",
+              "doc_id": "security.html",
+              "score": 0.673286
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0000",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.660329
+            },
+            {
+              "rank": 5,
+              "chunk_id": "billing.md#0001",
+              "doc_id": "billing.md",
+              "score": 0.6258
+            }
+          ],
+          "ranked_doc_ids": [
+            "billing.md",
+            "security.html",
+            "troubleshooting.txt"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 11.958,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q009",
+          "query": "Which HTTP headers tell a client that it has been rate limited?",
+          "relevant_doc_ids": [
+            "api.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.768758
+            },
+            {
+              "rank": 2,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.681223
+            },
+            {
+              "rank": 3,
+              "chunk_id": "billing.md#0001",
+              "doc_id": "billing.md",
+              "score": 0.675622
+            },
+            {
+              "rank": 4,
+              "chunk_id": "api.md#0002",
+              "doc_id": "api.md",
+              "score": 0.6608
+            },
+            {
+              "rank": 5,
+              "chunk_id": "api.md#0000",
+              "doc_id": "api.md",
+              "score": 0.653765
+            }
+          ],
+          "ranked_doc_ids": [
+            "api.md",
+            "troubleshooting.txt",
+            "billing.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 11.367,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q010",
+          "query": "What TCP ports are required for a self-hosted on-premises gateway?",
+          "relevant_doc_ids": [
+            "installation.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "installation.md#0002",
+              "doc_id": "installation.md",
+              "score": 0.707908
+            },
+            {
+              "rank": 2,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.705926
+            },
+            {
+              "rank": 3,
+              "chunk_id": "installation.md#0001",
+              "doc_id": "installation.md",
+              "score": 0.601834
+            },
+            {
+              "rank": 4,
+              "chunk_id": "installation.md#0000",
+              "doc_id": "installation.md",
+              "score": 0.598297
+            },
+            {
+              "rank": 5,
+              "chunk_id": "security.html#0000",
+              "doc_id": "security.html",
+              "score": 0.597347
+            }
+          ],
+          "ranked_doc_ids": [
+            "installation.md",
+            "troubleshooting.txt",
+            "security.html"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 11.426,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q011",
+          "query": "Does Lumen support single sign-on with Okta?",
+          "relevant_doc_ids": [
+            "security.html"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "security.html#0001",
+              "doc_id": "security.html",
+              "score": 0.688725
+            },
+            {
+              "rank": 2,
+              "chunk_id": "security.html#0000",
+              "doc_id": "security.html",
+              "score": 0.65551
+            },
+            {
+              "rank": 3,
+              "chunk_id": "installation.md#0000",
+              "doc_id": "installation.md",
+              "score": 0.630964
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0003",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.63022
+            },
+            {
+              "rank": 5,
+              "chunk_id": "troubleshooting.txt#0000",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.624601
+            }
+          ],
+          "ranked_doc_ids": [
+            "security.html",
+            "installation.md",
+            "troubleshooting.txt"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 11.366,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q012",
+          "query": "How many robots can be monitored on the Growth plan?",
+          "relevant_doc_ids": [
+            "billing.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.666397
+            },
+            {
+              "rank": 2,
+              "chunk_id": "billing.md#0000",
+              "doc_id": "billing.md",
+              "score": 0.643132
+            },
+            {
+              "rank": 3,
+              "chunk_id": "overview.md#0002",
+              "doc_id": "overview.md",
+              "score": 0.629167
+            },
+            {
+              "rank": 4,
+              "chunk_id": "overview.md#0001",
+              "doc_id": "overview.md",
+              "score": 0.62764
+            },
+            {
+              "rank": 5,
+              "chunk_id": "overview.md#0000",
+              "doc_id": "overview.md",
+              "score": 0.619662
+            }
+          ],
+          "ranked_doc_ids": [
+            "api.md",
+            "billing.md",
+            "overview.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 0.5,
+            "ndcg": 0.6309297535714575,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 11.976,
+          "prefix_used": ""
+        }
+      ]
+    },
+    {
+      "spec": "hf:all-MiniLM-L6-v2",
+      "backend": "hf",
+      "model": "all-MiniLM-L6-v2",
+      "status": "ok",
+      "error": null,
+      "metrics_k": 5,
+      "accuracy": {
+        "n_queries": 12,
+        "recall": 1.0,
+        "precision": 0.20000000000000004,
+        "mrr": 0.9583333333333334,
+        "ndcg": 0.9692441461309548,
+        "hit_rate": 1.0
+      },
+      "latency_ms": {
+        "count": 12,
+        "mean_ms": 9.272,
+        "min_ms": 6.213,
+        "max_ms": 20.259,
+        "p50_ms": 6.928,
+        "p95_ms": 18.852,
+        "p99_ms": 19.978,
+        "cold_query_ms": 20.259,
+        "warm_p50_ms": 6.899,
+        "warm_p95_ms": 15.057,
+        "warm_p99_ms": 17.171,
+        "queries_per_second": 107.854
+      },
+      "timing": {
+        "model_load_ms": 1176.37,
+        "embedding_seconds": 0.0,
+        "indexing_seconds": 0.004,
+        "batches": 0,
+        "embedded_chunks": 0,
+        "cached_chunks": 19,
+        "cold_embed_ms": null,
+        "warm_batch_p50_ms": null,
+        "warm_batch_p95_ms": null,
+        "warm_batch_p99_ms": null,
+        "index_build_ms": 0.166,
+        "total_seconds": 1.3012
+      },
+      "throughput": {
+        "chunks_per_second": 4790.721,
+        "embed_chunks_per_second": null,
+        "queries_per_second": 107.854
+      },
+      "tokens": {
+        "index_tokens": 2261,
+        "query_tokens": 202,
+        "total_tokens": 2463,
+        "estimated": false,
+        "method": "tokenizer:BertTokenizer, truncated to 512",
+        "cost_usd": 4.9e-05,
+        "price_per_1m_tokens": 0.02
+      },
+      "index": {
+        "backend": "faiss",
+        "dimension": 384,
+        "vectors": 19,
+        "disk_size_bytes": 29229,
+        "disk_size_mb": 0.028
+      },
+      "cache": {
+        "enabled": true,
+        "hits": 19,
+        "misses": 0,
+        "hit_rate": 1.0
+      },
+      "resources": {
+        "ram_baseline_mb": 471.41,
+        "ram_peak_mb": 569.96,
+        "ram_delta_mb": 98.54,
+        "ram_sampling_interval_s": 0.05,
+        "ram_sampling_error": null,
+        "provider": "sentence-transformers",
+        "device": "cpu",
+        "requested_device": "auto",
+        "torch_version": "2.14.1+cpu",
+        "sentencetransformer_max_seq_length": 512,
+        "peak_vram_mb": null,
+        "vram_measurement": null,
+        "model_resident_mb": null
+      },
+      "per_query": [
+        {
+          "query_id": "q001",
+          "query": "What is the maximum payload size for a single telemetry event?",
+          "relevant_doc_ids": [
+            "api.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "api.md#0000",
+              "doc_id": "api.md",
+              "score": 0.378703
+            },
+            {
+              "rank": 2,
+              "chunk_id": "overview.md#0001",
+              "doc_id": "overview.md",
+              "score": 0.264317
+            },
+            {
+              "rank": 3,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.245924
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.241629
+            },
+            {
+              "rank": 5,
+              "chunk_id": "overview.md#0002",
+              "doc_id": "overview.md",
+              "score": 0.224888
+            }
+          ],
+          "ranked_doc_ids": [
+            "api.md",
+            "overview.md",
+            "troubleshooting.txt"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 20.259,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q002",
+          "query": "Which Helio robot firmware versions are supported by Lumen Fleet 3.2?",
+          "relevant_doc_ids": [
+            "overview.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "overview.md#0000",
+              "doc_id": "overview.md",
+              "score": 0.701356
+            },
+            {
+              "rank": 2,
+              "chunk_id": "overview.md#0001",
+              "doc_id": "overview.md",
+              "score": 0.572146
+            },
+            {
+              "rank": 3,
+              "chunk_id": "overview.md#0002",
+              "doc_id": "overview.md",
+              "score": 0.563493
+            },
+            {
+              "rank": 4,
+              "chunk_id": "installation.md#0000",
+              "doc_id": "installation.md",
+              "score": 0.521173
+            },
+            {
+              "rank": 5,
+              "chunk_id": "billing.md#0000",
+              "doc_id": "billing.md",
+              "score": 0.449564
+            }
+          ],
+          "ranked_doc_ids": [
+            "overview.md",
+            "installation.md",
+            "billing.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 17.7,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q003",
+          "query": "How can an operator rotate an API key without interrupting telemetry ingestion?",
+          "relevant_doc_ids": [
+            "security.html"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "security.html#0002",
+              "doc_id": "security.html",
+              "score": 0.48795
+            },
+            {
+              "rank": 2,
+              "chunk_id": "api.md#0002",
+              "doc_id": "api.md",
+              "score": 0.387894
+            },
+            {
+              "rank": 3,
+              "chunk_id": "troubleshooting.txt#0001",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.272992
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.26757
+            },
+            {
+              "rank": 5,
+              "chunk_id": "overview.md#0002",
+              "doc_id": "overview.md",
+              "score": 0.262695
+            }
+          ],
+          "ranked_doc_ids": [
+            "security.html",
+            "api.md",
+            "troubleshooting.txt",
+            "overview.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 12.415,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q004",
+          "query": "What happens when a Growth plan team goes over its included two million API calls?",
+          "relevant_doc_ids": [
+            "billing.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "billing.md#0001",
+              "doc_id": "billing.md",
+              "score": 0.660576
+            },
+            {
+              "rank": 2,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.46089
+            },
+            {
+              "rank": 3,
+              "chunk_id": "security.html#0001",
+              "doc_id": "security.html",
+              "score": 0.376406
+            },
+            {
+              "rank": 4,
+              "chunk_id": "billing.md#0000",
+              "doc_id": "billing.md",
+              "score": 0.34287
+            },
+            {
+              "rank": 5,
+              "chunk_id": "billing.md#0002",
+              "doc_id": "billing.md",
+              "score": 0.298961
+            }
+          ],
+          "ranked_doc_ids": [
+            "billing.md",
+            "api.md",
+            "security.html"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 7.923,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q005",
+          "query": "How long are raw telemetry records retained for enterprise customers?",
+          "relevant_doc_ids": [
+            "security.html"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "security.html#0001",
+              "doc_id": "security.html",
+              "score": 0.574776
+            },
+            {
+              "rank": 2,
+              "chunk_id": "security.html#0002",
+              "doc_id": "security.html",
+              "score": 0.337177
+            },
+            {
+              "rank": 3,
+              "chunk_id": "billing.md#0002",
+              "doc_id": "billing.md",
+              "score": 0.290007
+            },
+            {
+              "rank": 4,
+              "chunk_id": "api.md#0000",
+              "doc_id": "api.md",
+              "score": 0.248202
+            },
+            {
+              "rank": 5,
+              "chunk_id": "billing.md#0001",
+              "doc_id": "billing.md",
+              "score": 0.23054
+            }
+          ],
+          "ranked_doc_ids": [
+            "security.html",
+            "billing.md",
+            "api.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 6.27,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q006",
+          "query": "Which environment variables configure the Lumen Agent's API endpoint and token?",
+          "relevant_doc_ids": [
+            "installation.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "installation.md#0001",
+              "doc_id": "installation.md",
+              "score": 0.743525
+            },
+            {
+              "rank": 2,
+              "chunk_id": "installation.md#0000",
+              "doc_id": "installation.md",
+              "score": 0.645914
+            },
+            {
+              "rank": 3,
+              "chunk_id": "troubleshooting.txt#0000",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.617775
+            },
+            {
+              "rank": 4,
+              "chunk_id": "overview.md#0002",
+              "doc_id": "overview.md",
+              "score": 0.51946
+            },
+            {
+              "rank": 5,
+              "chunk_id": "billing.md#0000",
+              "doc_id": "billing.md",
+              "score": 0.462705
+            }
+          ],
+          "ranked_doc_ids": [
+            "installation.md",
+            "troubleshooting.txt",
+            "overview.md",
+            "billing.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 6.491,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q007",
+          "query": "What does the AGENT-401 error mean and what should I check first?",
+          "relevant_doc_ids": [
+            "troubleshooting.txt"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "troubleshooting.txt#0001",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.52859
+            },
+            {
+              "rank": 2,
+              "chunk_id": "troubleshooting.txt#0000",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.50268
+            },
+            {
+              "rank": 3,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.500162
+            },
+            {
+              "rank": 4,
+              "chunk_id": "api.md#0002",
+              "doc_id": "api.md",
+              "score": 0.46958
+            },
+            {
+              "rank": 5,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.379201
+            }
+          ],
+          "ranked_doc_ids": [
+            "troubleshooting.txt",
+            "api.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 6.213,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q008",
+          "query": "Can an annual Lumen subscription be refunded after thirty days?",
+          "relevant_doc_ids": [
+            "billing.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "billing.md#0002",
+              "doc_id": "billing.md",
+              "score": 0.617102
+            },
+            {
+              "rank": 2,
+              "chunk_id": "billing.md#0000",
+              "doc_id": "billing.md",
+              "score": 0.540164
+            },
+            {
+              "rank": 3,
+              "chunk_id": "troubleshooting.txt#0000",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.4121
+            },
+            {
+              "rank": 4,
+              "chunk_id": "overview.md#0000",
+              "doc_id": "overview.md",
+              "score": 0.321785
+            },
+            {
+              "rank": 5,
+              "chunk_id": "troubleshooting.txt#0003",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.310094
+            }
+          ],
+          "ranked_doc_ids": [
+            "billing.md",
+            "troubleshooting.txt",
+            "overview.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 6.958,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q009",
+          "query": "Which HTTP headers tell a client that it has been rate limited?",
+          "relevant_doc_ids": [
+            "api.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.651359
+            },
+            {
+              "rank": 2,
+              "chunk_id": "billing.md#0001",
+              "doc_id": "billing.md",
+              "score": 0.362222
+            },
+            {
+              "rank": 3,
+              "chunk_id": "api.md#0000",
+              "doc_id": "api.md",
+              "score": 0.33584
+            },
+            {
+              "rank": 4,
+              "chunk_id": "api.md#0002",
+              "doc_id": "api.md",
+              "score": 0.287027
+            },
+            {
+              "rank": 5,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.205076
+            }
+          ],
+          "ranked_doc_ids": [
+            "api.md",
+            "billing.md",
+            "troubleshooting.txt"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 7.18,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q010",
+          "query": "What TCP ports are required for a self-hosted on-premises gateway?",
+          "relevant_doc_ids": [
+            "installation.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "installation.md#0002",
+              "doc_id": "installation.md",
+              "score": 0.279574
+            },
+            {
+              "rank": 2,
+              "chunk_id": "security.html#0000",
+              "doc_id": "security.html",
+              "score": 0.22163
+            },
+            {
+              "rank": 3,
+              "chunk_id": "troubleshooting.txt#0002",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.166543
+            },
+            {
+              "rank": 4,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.13921
+            },
+            {
+              "rank": 5,
+              "chunk_id": "installation.md#0001",
+              "doc_id": "installation.md",
+              "score": 0.100333
+            }
+          ],
+          "ranked_doc_ids": [
+            "installation.md",
+            "security.html",
+            "troubleshooting.txt",
+            "api.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 6.899,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q011",
+          "query": "Does Lumen support single sign-on with Okta?",
+          "relevant_doc_ids": [
+            "security.html"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "security.html#0000",
+              "doc_id": "security.html",
+              "score": 0.474058
+            },
+            {
+              "rank": 2,
+              "chunk_id": "installation.md#0001",
+              "doc_id": "installation.md",
+              "score": 0.370704
+            },
+            {
+              "rank": 3,
+              "chunk_id": "security.html#0001",
+              "doc_id": "security.html",
+              "score": 0.355649
+            },
+            {
+              "rank": 4,
+              "chunk_id": "troubleshooting.txt#0000",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.345042
+            },
+            {
+              "rank": 5,
+              "chunk_id": "billing.md#0000",
+              "doc_id": "billing.md",
+              "score": 0.337441
+            }
+          ],
+          "ranked_doc_ids": [
+            "security.html",
+            "installation.md",
+            "troubleshooting.txt",
+            "billing.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 1.0,
+            "ndcg": 1.0,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 6.609,
+          "prefix_used": ""
+        },
+        {
+          "query_id": "q012",
+          "query": "How many robots can be monitored on the Growth plan?",
+          "relevant_doc_ids": [
+            "billing.md"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "chunk_id": "overview.md#0002",
+              "doc_id": "overview.md",
+              "score": 0.361804
+            },
+            {
+              "rank": 2,
+              "chunk_id": "billing.md#0001",
+              "doc_id": "billing.md",
+              "score": 0.356505
+            },
+            {
+              "rank": 3,
+              "chunk_id": "troubleshooting.txt#0001",
+              "doc_id": "troubleshooting.txt",
+              "score": 0.324316
+            },
+            {
+              "rank": 4,
+              "chunk_id": "api.md#0001",
+              "doc_id": "api.md",
+              "score": 0.318982
+            },
+            {
+              "rank": 5,
+              "chunk_id": "installation.md#0000",
+              "doc_id": "installation.md",
+              "score": 0.315907
+            }
+          ],
+          "ranked_doc_ids": [
+            "overview.md",
+            "billing.md",
+            "troubleshooting.txt",
+            "api.md",
+            "installation.md"
+          ],
+          "metrics": {
+            "recall": 1.0,
+            "precision": 0.2,
+            "mrr": 0.5,
+            "ndcg": 0.6309297535714575,
+            "hit_rate": 1.0
+          },
+          "latency_ms": 6.345,
+          "prefix_used": ""
+        }
+      ]
+    }
+  ],
+  "recommendation": {
+    "priority": "balanced",
+    "selected": "hf:all-MiniLM-L6-v2",
+    "rationale": "Best weighted score (1.000) using 50% accuracy, 30% speed and 20% cost-equivalent: nDCG@5=0.969, p95=18.85 ms, estimated cost $0.000049.",
+    "by_priority": {
+      "accuracy": {
+        "priority": "accuracy",
+        "label": "Accuracy-first",
+        "model": "hf:all-MiniLM-L6-v2",
+        "rationale": "Highest nDCG@5 (0.969) with recall 1.000 and MRR 0.958; p95 query latency 18.85 ms.",
+        "ndcg": 0.9692,
+        "p95_ms": 18.852,
+        "cost_usd": 4.9e-05
+      },
+      "speed": {
+        "priority": "speed",
+        "label": "Speed-first",
+        "model": "hf:all-MiniLM-L6-v2",
+        "rationale": "Lowest p95 query latency (18.85 ms) while maintaining nDCG@5 of 0.969.",
+        "ndcg": 0.9692,
+        "p95_ms": 18.852,
+        "cost_usd": 4.9e-05
+      },
+      "balanced": {
+        "priority": "balanced",
+        "label": "Balanced",
+        "model": "hf:all-MiniLM-L6-v2",
+        "rationale": "Best weighted score (1.000) using 50% accuracy, 30% speed and 20% cost-equivalent: nDCG@5=0.969, p95=18.85 ms, estimated cost $0.000049.",
+        "ndcg": 0.9692,
+        "p95_ms": 18.852,
+        "cost_usd": 4.9e-05
+      }
+    },
+    "scores": [
+      {
+        "spec": "hf:BAAI/bge-small-en-v1.5",
+        "ndcg": 0.9692441461309548,
+        "accuracy_score": 1.0,
+        "speed_score": 0.0,
+        "cost_score": 1.0,
+        "balanced_score": 0.7,
+        "p95_ms": 51.825,
+        "cost_usd": 4.9e-05
+      },
+      {
+        "spec": "hf:all-MiniLM-L6-v2",
+        "ndcg": 0.9692441461309548,
+        "accuracy_score": 1.0,
+        "speed_score": 1.0,
+        "cost_score": 1.0,
+        "balanced_score": 1.0,
+        "p95_ms": 18.852,
+        "cost_usd": 4.9e-05
+      }
+    ],
+    "weights": {
+      "accuracy": 0.5,
+      "speed": 0.3,
+      "cost": 0.2
+    },
+    "top_k": 5
+  },
+  "artifacts": {
+    "results_json": "examples\\results_repro\\results.json",
+    "results_csv": "examples\\results_repro\\results.csv",
+    "queries_csv": "examples\\results_repro\\queries.csv",
+    "report_html": "examples\\results_repro\\report.html",
+    "config_snapshot": "examples\\results_repro\\config.snapshot.yaml"
+  }
+}

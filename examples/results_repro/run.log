@@ -1,0 +1,9 @@
+2026-10-26T09:16:36 INFO     embedbench.ingest: Loaded 6 documents (8467 characters), skipped 0
+2026-10-26T09:16:36 INFO     embedbench.chunking: Created 19 chunks from 6 documents (strategy=recursive, size=600, overlap=100)
+2026-10-26T09:16:36 INFO     embedbench.evalset: Loaded 12 evaluation queries from examples\evalset.jsonl
+2026-10-26T09:17:08 INFO     embedbench.backends.hf: Loaded HF model BAAI/bge-small-en-v1.5 on cpu (dimension=384, max_seq_length=512)
+2026-10-26T09:17:09 INFO     embedbench.benchmark: hf:BAAI/bge-small-en-v1.5: 19 cache hits, 0 chunks to embed
+2026-10-26T09:17:10 INFO     embedbench.backends.hf: Loaded HF model all-MiniLM-L6-v2 on cpu (dimension=384, max_seq_length=512)
+2026-10-26T09:17:10 INFO     embedbench.benchmark: hf:all-MiniLM-L6-v2: 19 cache hits, 0 chunks to embed
+2026-10-26T09:17:11 INFO     embedbench.report: HTML report written to examples\results_repro\report.html
+2026-10-26T09:17:11 INFO     embedbench.benchmark: Results written to examples\results_repro\results.json

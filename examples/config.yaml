@@ -1,0 +1,59 @@
+# Example: compare two Hugging Face embedding models on the sample corpus.
+# Run from the repository root:
+#   embedbench run --config examples/config.yaml
+#
+# Add an Ollama model after `ollama pull nomic-embed-text`:
+#   embedbench run --config examples/config.yaml \
+#     --models hf:BAAI/bge-small-en-v1.5,ollama:nomic-embed-text
+
+docs: ./examples/docs
+models:
+  - hf:BAAI/bge-small-en-v1.5
+  - hf:all-MiniLM-L6-v2
+
+top_k: 5
+seed: 42
+output_dir: ./examples/results
+
+chunking:
+  strategy: recursive
+  chunk_size: 600
+  chunk_overlap: 100
+  min_chunk_chars: 80
+
+ingestion:
+  extensions: [".txt", ".md", ".pdf", ".docx", ".html"]
+  recursive: true
+  max_file_bytes: 20000000
+
+evalset:
+  path: ./examples/evalset.jsonl
+  auto_generate: false
+  ollama_model: llama3.2
+  questions_per_chunk: 1
+  max_chunks: 30
+  min_chunk_chars: 120
+  min_question_words: 5
+  max_question_words: 40
+  dedupe_threshold: 0.85
+  temperature: 0.0
+
+backends:
+  hf:
+    device: auto
+    batch_size: 32
+    max_seq_length: 512
+  ollama:
+    host: http://localhost:11434
+    batch_size: 16
+    timeout_s: 120
+    max_retries: 3
+
+cache:
+  enabled: true
+  dir: ./.embedbench_cache
+
+report:
+  title: "Embedding models for the Helio knowledge base"
+  priority: balanced
+  cost_per_1m_tokens: 0.02

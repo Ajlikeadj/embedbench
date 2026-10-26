@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Lumen Security and Compliance</title>
+</head>
+<body>
+  <nav>Home | Docs | Status</nav>
+  <main>
+    <h1>Security and compliance at Lumen</h1>
+    <p>Security controls apply equally to the managed cloud and to self-hosted
+    gateway deployments. Self-hosted customers manage their own encryption keys.</p>
+
+    <h2>Encryption and access</h2>
+    <p>Data is encrypted in transit with TLS 1.3 and at rest with AES-256.
+    Role-based access control provides four roles: owner, admin, operator, and
+    viewer. Only owners can change billing or delete a site.</p>
+
+    <h2>Single sign-on</h2>
+    <p>Enterprise plans support SSO through SAML 2.0 and OpenID Connect. Okta,
+    Microsoft Entra ID, and Google Workspace are validated identity providers.
+    SCIM 2.0 provisioning is available on Enterprise plans only.</p>
+
+    <h2>Data retention</h2>
+    <p>Raw telemetry retention depends on the plan: 30 days on Starter, 90 days
+    on Growth, and 365 days on Enterprise. Enterprise retention can be configured
+    up to three years. Encrypted backups are kept for 35 days. Deleted sites are
+    purged from backups within 45 days.</p>
+
+    <h2>API keys and audits</h2>
+    <p>API keys must be rotated at least every 90 days. Rotation creates a second
+    active key and keeps the previous key valid for 24 hours so ingestion can
+    switch without a gap. Audit logs record authentication, permission changes,
+    exports, and key rotation, and are retained for one year.</p>
+
+    <h2>Certifications</h2>
+    <p>Lumen maintains SOC 2 Type II and ISO 27001 certifications. Penetration
+    test summaries are available to customers under NDA.</p>
+  </main>
+  <footer>© Lumen Robotics</footer>
+</body>
+</html>

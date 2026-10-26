@@ -1,0 +1,32 @@
+LUMEN AGENT TROUBLESHOOTING GUIDE
+
+AGENT-401 — Unauthorized
+The API token is missing, expired, or scoped to another site. Check the host
+clock first: more than five minutes of drift invalidates signed requests. Run
+`lumen-agent doctor --site SITE_ID` to test the token, then rotate the token in
+the console. Restart the agent after updating LUMEN_API_TOKEN.
+
+AGENT-403 — Forbidden
+The token is valid but lacks the telemetry:write permission. This usually means
+the token belongs to a viewer or was created before the site was moved to a new
+organization. Create a site-scoped token with the operator role.
+
+AGENT-409 — Duplicate robot serial
+Two agents are publishing under the same robot serial number. Stop the duplicate
+agent and clear its spool with `lumen-agent spool clear --robot SERIAL`. Do not
+delete the robot; mission history would be lost.
+
+AGENT-429 — Local spool full
+The agent cannot keep up with telemetry or cannot reach the API. Check outbound
+HTTPS connectivity, increase disk to 80 GB, or reduce the lidar summary rate.
+
+GATEWAY-502 — Bad upstream response
+The on-premises gateway cannot reach the Fleet API. Verify the gateway proxy,
+DNS, and outbound TCP 443. The gateway retries for 15 minutes before dropping
+batches.
+
+Diagnostics
+`lumen-agent doctor` checks DNS, TLS, API authentication, clock drift, spool
+health, and the local health port. Logs are available with
+`journalctl -u lumen-agent --since "30 minutes ago"` or in
+`/var/log/lumen/agent.log`. Health checks run on port 8787.

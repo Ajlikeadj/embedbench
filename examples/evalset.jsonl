@@ -1,0 +1,12 @@
+{"query_id": "q001", "query": "What is the maximum payload size for a single telemetry event?", "relevant_doc_ids": ["api.md"], "answer": "5 MB after compression."}
+{"query_id": "q002", "query": "Which Helio robot firmware versions are supported by Lumen Fleet 3.2?", "relevant_doc_ids": ["overview.md"], "answer": "R2 firmware 4.0+, R3 firmware 4.2+, and R4 firmware 5.1+."}
+{"query_id": "q003", "query": "How can an operator rotate an API key without interrupting telemetry ingestion?", "relevant_doc_ids": ["security.html"], "answer": "Rotation creates a second active key and the previous key remains valid for 24 hours."}
+{"query_id": "q004", "query": "What happens when a Growth plan team goes over its included two million API calls?", "relevant_doc_ids": ["billing.md"], "answer": "Extra calls are billed at $0.40 per additional 1,000 API calls."}
+{"query_id": "q005", "query": "How long are raw telemetry records retained for enterprise customers?", "relevant_doc_ids": ["security.html"], "answer": "365 days by default, configurable up to three years."}
+{"query_id": "q006", "query": "Which environment variables configure the Lumen Agent's API endpoint and token?", "relevant_doc_ids": ["installation.md"], "answer": "LUMEN_API_URL and LUMEN_API_TOKEN."}
+{"query_id": "q007", "query": "What does the AGENT-401 error mean and what should I check first?", "relevant_doc_ids": ["troubleshooting.txt"], "answer": "It is an unauthorized token error; check host clock drift first."}
+{"query_id": "q008", "query": "Can an annual Lumen subscription be refunded after thirty days?", "relevant_doc_ids": ["billing.md"], "answer": "No; annual plans are only refundable pro-rata within 30 days of purchase."}
+{"query_id": "q009", "query": "Which HTTP headers tell a client that it has been rate limited?", "relevant_doc_ids": ["api.md"], "answer": "Retry-After plus X-RateLimit-Limit, X-RateLimit-Remaining, and X-RateLimit-Reset."}
+{"query_id": "q010", "query": "What TCP ports are required for a self-hosted on-premises gateway?", "relevant_doc_ids": ["installation.md"], "answer": "Inbound 443 for the admin UI, 8443 for telemetry, and 8787 for agent health."}
+{"query_id": "q011", "query": "Does Lumen support single sign-on with Okta?", "relevant_doc_ids": ["security.html"], "answer": "Yes, via SAML 2.0 or OpenID Connect on Enterprise plans."}
+{"query_id": "q012", "query": "How many robots can be monitored on the Growth plan?", "relevant_doc_ids": ["billing.md"], "answer": "Up to 50 robots."}

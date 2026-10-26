@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# embedbench runtime artifacts
+.embedbench_cache/
+results/
+examples/results/
+*.faiss
+*.npy
+embeddings.sqlite3
+
+# Local configs and secrets
+.env
+.env.*
+!.env.example
+*.local.yaml
+*.local.yml
+
+# Editors and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Packaging and temporary files
+.wheeltest/
+.pip-install.log
+pip-wheel-metadata/

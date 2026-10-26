@@ -1,0 +1,203 @@
+
+=== probe_progress ===
+Corpus: 4 documents, 120 chunks (35,608 characters)
+Eval set: 12 queries from C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\evalset.jsonl
+
+Benchmarking fake:hash
+Embedding fake:hash ----------------------------------------   0/120 0:00:00 -:--:--Embedding fake:hash ---------------------------------------- 120/120 0:00:00 0:00:00
+  nDCG@5=0.969  MRR=0.958  p95=0.3 ms
+
+──────────────────────────────────────── embedbench results ────────────────────────────────────────
+Corpus: 4 documents | 120 chunks | 12 queries | seed 42 | k=5
+    Retrieval accuracy (k=5, document-level    
+                  relevance)                   
+ Model       nDCG  Recall  Prec.    MRR    Hit 
+ fake:hash  0.969   1.000  0.200  0.958  1.000 
+                Latency, indexing and throughput                 
+ Model      p50 ms  p95 ms  p99 ms  Index s  Chunks/s  Queries/s 
+ fake:hash     0.1     0.3     0.4     0.19     621.3     7318.9 
+             Model footprint and cost-equivalent              
+ Model      Dim  Index MB  Tokens  Cost est.  RAM MB  VRAM MB 
+ fake:hash   64     0.029  8,556*  $0.000171    81.3      n/a 
+* Token count estimated: Ollama does not expose the model tokenizer.
+┌───────────────────────────────────────── Recommendation ─────────────────────────────────────────┐
+│ Selected: fake:hash (Balanced)                                                                   │
+│ Best weighted score (1.000) using 50% accuracy, 30% speed and 20% cost-equivalent: nDCG@5=0.969, │
+│ p95=0.28 ms, estimated cost $0.000171.                                                           │
+│ Alternatives - Accuracy-first: fake:hash | Speed-first: fake:hash                                │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+          Recommendation scores           
+ Model       Acc.  Speed   Cost  Balanced 
+ fake:hash  1.000  1.000  1.000     1.000 
+Artifacts:
+  results_json: C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\results.json
+  results_csv: C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\results.csv
+  queries_csv: C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\queries.csv
+  report_html: C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\report.html
+  config_snapshot: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\config.snapshot.yaml
+[ok  ] progress run ok 
+[ok  ] corpus is multi-batch 120
+[ok  ] multiple batches embedded {'model_load_ms': 0.002, 'embedding_seconds': 0.0367, 'indexing_seconds': 0.1932, 'batches': 15, 'embedded_chunks': 120, 'cached_chunks': 0, 'cold_embed_ms': 2.328, 'warm_batch_p50_ms': 2.524, 'warm_batch_p95_ms': 2.976, 'warm_batch_p99_ms': 3.031, 'index_build_ms': 150.758, 'total_seconds': 0.2255}
+[ok  ] cold embed measured {'model_load_ms': 0.002, 'embedding_seconds': 0.0367, 'indexing_seconds': 0.1932, 'batches': 15, 'embedded_chunks': 120, 'cached_chunks': 0, 'cold_embed_ms': 2.328, 'warm_batch_p50_ms': 2.524, 'warm_batch_p95_ms': 2.976, 'warm_batch_p99_ms': 3.031, 'index_build_ms': 150.758, 'total_seconds': 0.2255}
+[ok  ] warm batch p50 measured {'model_load_ms': 0.002, 'embedding_seconds': 0.0367, 'indexing_seconds': 0.1932, 'batches': 15, 'embedded_chunks': 120, 'cached_chunks': 0, 'cold_embed_ms': 2.328, 'warm_batch_p50_ms': 2.524, 'warm_batch_p95_ms': 2.976, 'warm_batch_p99_ms': 3.031, 'index_build_ms': 150.758, 'total_seconds': 0.2255}
+[ok  ] all chunks embedded {'model_load_ms': 0.002, 'embedding_seconds': 0.0367, 'indexing_seconds': 0.1932, 'batches': 15, 'embedded_chunks': 120, 'cached_chunks': 0, 'cold_embed_ms': 2.328, 'warm_batch_p50_ms': 2.524, 'warm_batch_p95_ms': 2.976, 'warm_batch_p99_ms': 3.031, 'index_build_ms': 150.758, 'total_seconds': 0.2255}
+[ok  ] throughput present {'chunks_per_second': 621.253, 'embed_chunks_per_second': 3269.755, 'queries_per_second': 7318.858}
+[ok  ] cache miss first run {'enabled': True, 'hits': 0, 'misses': 120, 'hit_rate': 0.0}
+Corpus: 4 documents, 120 chunks (35,608 characters)
+Eval set: 12 queries from C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\evalset.jsonl
+
+Benchmarking fake:hash
+Embedding fake:hash ----------------------------------------   0/120 0:00:00 -:--:--Embedding fake:hash ---------------------------------------- 120/120 0:00:00 0:00:00
+  nDCG@5=0.969  MRR=0.958  p95=0.3 ms
+
+──────────────────────────────────────── embedbench results ────────────────────────────────────────
+Corpus: 4 documents | 120 chunks | 12 queries | seed 42 | k=5
+    Retrieval accuracy (k=5, document-level    
+                  relevance)                   
+ Model       nDCG  Recall  Prec.    MRR    Hit 
+ fake:hash  0.969   1.000  0.200  0.958  1.000 
+                Latency, indexing and throughput                 
+ Model      p50 ms  p95 ms  p99 ms  Index s  Chunks/s  Queries/s 
+ fake:hash     0.1     0.3     0.3     0.00   89505.5     6876.8 
+             Model footprint and cost-equivalent              
+ Model      Dim  Index MB  Tokens  Cost est.  RAM MB  VRAM MB 
+ fake:hash   64     0.029  8,556*  $0.000171    82.7      n/a 
+* Token count estimated: Ollama does not expose the model tokenizer.
+Cache reuse: fake:hash 100%; indexing throughput includes cache lookups.
+┌───────────────────────────────────────── Recommendation ─────────────────────────────────────────┐
+│ Selected: fake:hash (Balanced)                                                                   │
+│ Best weighted score (1.000) using 50% accuracy, 30% speed and 20% cost-equivalent: nDCG@5=0.969, │
+│ p95=0.25 ms, estimated cost $0.000171.                                                           │
+│ Alternatives - Accuracy-first: fake:hash | Speed-first: fake:hash                                │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+          Recommendation scores           
+ Model       Acc.  Speed   Cost  Balanced 
+ fake:hash  1.000  1.000  1.000     1.000 
+Artifacts:
+  results_json: C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\results.json
+  results_csv: C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\results.csv
+  queries_csv: C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\queries.csv
+  report_html: C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\report.html
+  config_snapshot: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_progress\out\config.snapshot.yaml
+[ok  ] warm cache full hit {'enabled': True, 'hits': 120, 'misses': 0, 'hit_rate': 1.0}
+[ok  ] warm run no embedding {'model_load_ms': 0.005, 'embedding_seconds': 0.0, 'indexing_seconds': 0.0013, 'batches': 0, 'embedded_chunks': 0, 'cached_chunks': 120, 'cold_embed_ms': None, 'warm_batch_p50_ms': None, 'warm_batch_p95_ms': None, 'warm_batch_p99_ms': None, 'index_build_ms': 0.141, 'total_seconds': 0.0157}
+[ok  ] warm run no cold embed {'model_load_ms': 0.005, 'embedding_seconds': 0.0, 'indexing_seconds': 0.0013, 'batches': 0, 'embedded_chunks': 0, 'cached_chunks': 120, 'cold_embed_ms': None, 'warm_batch_p50_ms': None, 'warm_batch_p95_ms': None, 'warm_batch_p99_ms': None, 'index_build_ms': 0.141, 'total_seconds': 0.0157}
+
+=== probe_no_progress ===
+Corpus: 4 documents, 120 chunks (35,608 characters)
+Eval set: 12 queries from 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\evalset.jsonl
+
+Benchmarking fake:hash
+  nDCG@5=0.969  MRR=0.958  p95=0.2 ms
+
+────────────────────────────────── embedbench results ──────────────────────────────────
+Corpus: 4 documents | 120 chunks | 12 queries | seed 42 | k=5
+    Retrieval accuracy (k=5, document-level    
+                  relevance)                   
+ Model       nDCG  Recall  Prec.    MRR    Hit 
+ fake:hash  0.969   1.000  0.200  0.958  1.000 
+                Latency, indexing and throughput                 
+ Model      p50 ms  p95 ms  p99 ms  Index s  Chunks/s  Queries/s 
+ fake:hash     0.1     0.2     0.2     0.04    3202.2    10650.6 
+             Model footprint and cost-equivalent              
+ Model      Dim  Index MB  Tokens  Cost est.  RAM MB  VRAM MB 
+ fake:hash   64     0.029  8,556*  $0.000171    83.3      n/a 
+* Token count estimated: Ollama does not expose the model tokenizer.
+┌─────────────────────────────────── Recommendation ───────────────────────────────────┐
+│ Selected: fake:hash (Balanced)                                                       │
+│ Best weighted score (1.000) using 50% accuracy, 30% speed and 20% cost-equivalent:   │
+│ nDCG@5=0.969, p95=0.19 ms, estimated cost $0.000171.                                 │
+│ Alternatives - Accuracy-first: fake:hash | Speed-first: fake:hash                    │
+└──────────────────────────────────────────────────────────────────────────────────────┘
+          Recommendation scores           
+ Model       Acc.  Speed   Cost  Balanced 
+ fake:hash  1.000  1.000  1.000     1.000 
+Artifacts:
+  results_json: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\results.json
+  results_csv: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\results.csv
+  queries_csv: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\queries.csv
+  report_html: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\report.html
+  config_snapshot: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\config.snapshot.yaml
+[ok  ] no-progress run ok 
+[ok  ] summary printed Corpus: 4 documents, 120 chunks (35,608 characters) Eval set: 12 queries from  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\evalset.jsonl  Benchmarking fake:hash   nDCG@5=0.969  MRR=0.958  p95=0.2 ms  ────────────────────────────────── embedbench results ──────────────────────────
+[ok  ] recommendation printed          Model       Acc.  Speed   Cost  Balanced   fake:hash  1.000  1.000  1.000     1.000  Artifacts:   results_json:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\results.json   results_csv:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\results.csv   queries_csv:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\queries.csv   report_html:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\report.html   config_snapshot:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\out\config.snapshot.yaml 
+[ok  ] accuracy table printed Corpus: 4 documents, 120 chunks (35,608 characters) Eval set: 12 queries from  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\evalset.jsonl  Benchmarking fake:hash   nDCG@5=0.969  MRR=0.958  p95=0.2 ms  ────────────────────────────────── embedbench results ────────────────────────────────── Corpus: 4 documents | 120 chunks | 12 queries | seed 42 | k=5     Retrieval accuracy (k=5, document-level                       relevance)                     Model       nDCG  Recall  Prec. 
+[ok  ] resource table printed Corpus: 4 documents, 120 chunks (35,608 characters) Eval set: 12 queries from  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_no_progress\evalset.jsonl  Benchmarking fake:hash   nDCG@5=0.969  MRR=0.958  p95=0.2 ms  ────────────────────────────────── embedbench results ────────────────────────────────── Corpus: 4 documents | 120 chunks | 12 queries | seed 42 | k=5     Retrieval accuracy (k=5, document-level                       relevance)                     Model       nDCG  Recall  Prec.    MRR    Hit   fake:hash  0.969   1.000  0.200  0.958  1.000                  Latency, indexing and throughput                   Model      p50 ms  p95 ms  p99 ms  Index s  Chunks/s  Queries/s   fake:hash     0.1     0.2     0.2     0.04    3202.2    10650.6               Model footprint and cost-e
+
+=== probe_failed_model_reporting ===
+Corpus: 4 documents, 120 chunks (35,608 characters)
+Eval set: 12 queries from 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\evalset.jsonl
+
+Benchmarking fake:hash
+  nDCG@5=0.969  MRR=0.958  p95=0.3 ms
+
+Benchmarking fake:missing
+Model fake:missing failed: Fake model 'missing' is not installed
+  failed: Fake model 'missing' is not installed
+
+Benchmarking bogus
+  failed: Invalid model spec 'bogus'. Expected 'backend:model', for example 
+'ollama:nomic-embed-text' or 'hf:BAAI/bge-small-en-v1.5'.
+
+─────────────────────────────────── embedbench results ───────────────────────────────────
+Corpus: 4 documents | 120 chunks | 12 queries | seed 42 | k=5
+    Retrieval accuracy (k=5, document-level    
+                  relevance)                   
+ Model       nDCG  Recall  Prec.    MRR    Hit 
+ fake:hash  0.969   1.000  0.200  0.958  1.000 
+                Latency, indexing and throughput                 
+ Model      p50 ms  p95 ms  p99 ms  Index s  Chunks/s  Queries/s 
+ fake:hash     0.1     0.3     0.3     0.04    2896.8     6685.6 
+             Model footprint and cost-equivalent              
+ Model      Dim  Index MB  Tokens  Cost est.  RAM MB  VRAM MB 
+ fake:hash   64     0.029  8,556*  $0.000171    83.4      n/a 
+* Token count estimated: Ollama does not expose the model tokenizer.
+┌──────────────────────────────────── Recommendation ────────────────────────────────────┐
+│ Selected: fake:hash (Balanced)                                                         │
+│ Best weighted score (1.000) using 50% accuracy, 30% speed and 20% cost-equivalent:     │
+│ nDCG@5=0.969, p95=0.28 ms, estimated cost $0.000171.                                   │
+│ Alternatives - Accuracy-first: fake:hash | Speed-first: fake:hash                      │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+          Recommendation scores           
+ Model       Acc.  Speed   Cost  Balanced 
+ fake:hash  1.000  1.000  1.000     1.000 
+┌────────────────────────────────── Failed models (2) ───────────────────────────────────┐
+│ fake:missing: Fake model 'missing' is not installed                                    │
+│ bogus: Invalid model spec 'bogus'. Expected 'backend:model', for example               │
+│ 'ollama:nomic-embed-text' or 'hf:BAAI/bge-small-en-v1.5'.                              │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+Artifacts:
+  results_json: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\result
+s.json
+  results_csv: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\result
+s.csv
+  queries_csv: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\querie
+s.csv
+  report_html: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\report
+.html
+  config_snapshot: 
+C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\config
+.snapshot.yaml
+[ok  ] partial failure counts (1, 2)
+[ok  ] failed panel printed                 │ └────────────────────────────────────────────────────────────────────────────────────────┘ Artifacts:   results_json:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\result s.json   results_csv:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\result s.csv   queries_csv:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\querie s.csv   report_html:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\report .html   config_snapshot:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\config .snapshot.yaml 
+[ok  ] failure detail printed                 │ └────────────────────────────────────────────────────────────────────────────────────────┘ Artifacts:   results_json:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\result s.json   results_csv:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\result s.csv   queries_csv:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\querie s.csv   report_html:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\report .html   config_snapshot:  C:\Users\adity\AppData\Local\Temp\tmpozl38xft\probe_failed_model_reporting\out_fail\config .snapshot.yaml 
+[ok  ] failures in html 
+[ok  ] report still renders charts 
+[ok  ] csv has all models 4
+[ok  ] csv records errors ['', "Fake model 'missing' is not installed", '"Invalid model spec \'bogus\'. Expected \'backend:model\'']
+
+============================================================
+ALL PROGRESS PROBES PASSED
