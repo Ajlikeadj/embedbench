@@ -48,6 +48,17 @@ backends:
     batch_size: 16
     timeout_s: 120
     max_retries: 3
+  # Hosted providers (needs `pip install "embedbench[openai]"` and OPENAI_API_KEY).
+  # Prefer environment variables over putting keys in this file.
+  openai:
+    dimensions: 512          # optional output-dimension reduction
+    batch_size: 64
+    max_retries: 3
+    timeout_s: 60
+  # cohere:
+  #   batch_size: 96
+  # voyage:
+  #   batch_size: 128
 
 cache:
   enabled: true

@@ -40,3 +40,7 @@ Thumbs.db
 .wheeltest/
 .pip-install.log
 pip-wheel-metadata/
+.tmp/
+pytest-of-*/
+pytest-*/
+

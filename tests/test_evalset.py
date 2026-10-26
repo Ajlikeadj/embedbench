@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 import pytest
+
 from embedbench.config import EvalsetConfig
 from embedbench.errors import EvalsetError
 from embedbench.evalset import (
@@ -14,8 +15,8 @@ from embedbench.evalset import (
     save_evalset,
     validate_evalset_documents,
 )
-from embedbench.models import Chunk, EvalExample
 from embedbench.ollama_client import OllamaError
+from embedbench.schemas import Chunk, EvalExample
 
 
 def write_jsonl(path: Path, records: list[dict]) -> None:
@@ -198,8 +199,7 @@ def generator_config(**overrides) -> EvalsetConfig:
 
 def test_generator_filters_vague_short_and_duplicate_questions() -> None:
     chunk = make_chunk(
-        "The maximum payload size is five megabytes. "
-        "The Growth plan can monitor fifty robots."
+        "The maximum payload size is five megabytes. The Growth plan can monitor fifty robots."
     )
     payload = {
         "questions": [
@@ -274,7 +274,11 @@ def test_generator_max_chunks_is_deterministic() -> None:
             match = re.search(r"marker-([a-z0-9]+)", prompt)
             marker = match.group(1) if match else "none"
             return json.dumps(
-                {"questions": [{"question": f"What is chunk marker-{marker} about?", "answer": "x"}]}
+                {
+                    "questions": [
+                        {"question": f"What is chunk marker-{marker} about?", "answer": "x"}
+                    ]
+                }
             )
 
     chunks = [

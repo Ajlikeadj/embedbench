@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from embedbench.report import (
     recommend_models,
     render_html,

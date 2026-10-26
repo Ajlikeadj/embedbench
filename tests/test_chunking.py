@@ -3,10 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
+
 from embedbench.chunking import chunk_document
 from embedbench.config import ChunkingConfig
-from embedbench.models import Document
-from pydantic import ValidationError
+from embedbench.schemas import Document
 
 
 def make_document(text: str, doc_id: str = "doc.md") -> Document:
@@ -77,9 +78,7 @@ def test_fixed_chunking_exact_windows_and_overlap() -> None:
 
 def test_fixed_chunking_min_chunk_chars_drops_tail() -> None:
     document = make_document("abcdefghijklmnopqrstuvwxyz")
-    chunks = chunk_document(
-        document, make_config("fixed", size=8, overlap=2, min_chars=5)
-    )
+    chunks = chunk_document(document, make_config("fixed", size=8, overlap=2, min_chars=5))
     assert [chunk.text for chunk in chunks] == ["abcdefgh", "ghijklmn", "mnopqrst", "stuvwxyz"]
 
 
@@ -134,7 +133,7 @@ def test_recursive_chunking_respects_size_and_coverage_for_long_paragraphs() -> 
 
 
 def test_chunking_is_deterministic() -> None:
-    document = make_document(("Deterministic chunks are important. " * 20))
+    document = make_document("Deterministic chunks are important. " * 20)
     config = make_config("recursive", size=120, overlap=20, min_chars=30)
 
     first = chunk_document(document, config)
@@ -155,7 +154,9 @@ def test_chunk_ids_are_stable_and_ordinal() -> None:
     chunks = chunk_document(document, make_config("sentence", size=100, overlap=0))
     assert all(chunk.doc_id == "folder/file.md" for chunk in chunks)
     assert [chunk.ordinal for chunk in chunks] == list(range(len(chunks)))
-    assert all(chunk.chunk_id == f"folder/file.md#{index:04d}" for index, chunk in enumerate(chunks))
+    assert all(
+        chunk.chunk_id == f"folder/file.md#{index:04d}" for index, chunk in enumerate(chunks)
+    )
 
 
 def test_overlap_must_be_smaller_than_size() -> None:

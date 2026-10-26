@@ -4,6 +4,7 @@ from pathlib import Path
 
 import docx
 import pytest
+
 from embedbench.config import IngestionConfig
 from embedbench.errors import IngestionError
 from embedbench.ingest import clean_text, load_document, load_documents
@@ -17,7 +18,9 @@ def make_config(**overrides) -> IngestionConfig:
 
 def test_loads_markdown_html_and_text(tmp_path: Path) -> None:
     (tmp_path / "guide.md").write_text("# Install Guide\n\nRun the installer.\n", encoding="utf-8")
-    (tmp_path / "notes.txt").write_text("Plain text notes.\n\nSecond paragraph.\n", encoding="utf-8")
+    (tmp_path / "notes.txt").write_text(
+        "Plain text notes.\n\nSecond paragraph.\n", encoding="utf-8"
+    )
     (tmp_path / "page.html").write_text(
         "<html><head><title>Security</title></head><body>"
         "<nav>Ignore me</nav><script>alert('x')</script>"

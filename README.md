@@ -1,21 +1,26 @@
 # embedbench
 
-**Benchmark embedding models for RAG retrieval on your own documents, entirely locally.**
+**Benchmark text embedding models on your own data — retrieval quality, latency, memory and cost.**
 
-`embedbench` ingests a folder of documents, builds a retrieval evaluation set, embeds
-and indexes your corpus with several models, and compares accuracy, latency, tokens,
-memory and cost-equivalent. It runs against a local Ollama server or local Hugging Face
-sentence-transformers models, with no cloud evaluation service and no API keys required.
+`embedbench` embeds and indexes your corpus with several models, runs the same queries
+through every one, and compares retrieval accuracy, latency percentiles, throughput,
+memory footprint and dollar cost. It works with local models (Ollama,
+sentence-transformers) and hosted APIs (OpenAI, Cohere, Voyage AI) behind one interface,
+with no benchmarking service in between.
 
 - **Bring your own corpus:** `.txt`, `.md`, `.pdf`, `.docx`, `.html`.
-- **Bring your own queries or generate them:** JSONL eval sets, or synthetic
-  questions from a local Ollama LLM with quality filtering.
-- **Compare fairly on one machine:** per-model FAISS indexes, exact cosine retrieval,
-  cold/warm timings, cache-aware throughput, token counts and memory sampling.
-- **Get an answer:** console tables, JSON/CSV, and a self-contained HTML report with
-  charts and accuracy-first / speed-first / balanced recommendations.
+- **Bring your own queries or generate them:** JSONL datasets, or synthetic questions
+  from a local Ollama LLM with quality filtering.
+- **Compare fairly on one machine:** per-model indexes, exact cosine retrieval,
+  cold/warm timings, cache-aware throughput, token counts, RSS and VRAM sampling.
+- **Stress the failure modes:** needle-in-a-haystack at 2k/8k/32k tokens, chunk-size
+  sweeps at 128–1024 tokens, and typo/paraphrase query robustness — all reproducible.
+- **Get an answer:** Rich console tables, JSON/CSV/Markdown artifacts, PNG comparison
+  plots, and a self-contained HTML report with weighted recommendations.
+- **Use it as a library:** `from embedbench import Evaluator` runs the same engine
+  without touching the filesystem.
 
-Status: `0.1.0`, beta. Python 3.10+. MIT licensed.
+Status: `0.2.0`, beta. Python 3.10+. MIT licensed.
 
 ---
 
@@ -25,19 +30,21 @@ Status: `0.1.0`, beta. Python 3.10+. MIT licensed.
 2. [Architecture](#architecture)
 3. [Install](#install)
 4. [Quickstart](#quickstart)
-5. [CLI reference](#cli-reference)
-6. [Configuration reference](#configuration-reference)
-7. [Evaluation sets](#evaluation-sets)
-8. [Metrics and report interpretation](#metrics-and-report-interpretation)
-9. [Sample output](#sample-output)
-10. [Adding a custom backend](#adding-a-custom-backend)
-11. [Reproducibility and caching](#reproducibility-and-caching)
-12. [Project layout](#project-layout)
-13. [Tests](#tests)
-14. [Known limitations](#known-limitations)
-15. [Troubleshooting](#troubleshooting)
-16. [Design decisions and trade-offs](#design-decisions-and-trade-offs)
-17. [License](#license)
+5. [Python API](#python-api)
+6. [Stress workloads](#stress-workloads)
+7. [CLI reference](#cli-reference)
+8. [Configuration reference](#configuration-reference)
+9. [Evaluation sets](#evaluation-sets)
+10. [Metrics and report interpretation](#metrics-and-report-interpretation)
+11. [Sample output](#sample-output)
+12. [Adding a custom provider](#adding-a-custom-provider)
+13. [Reproducibility and caching](#reproducibility-and-caching)
+14. [Project layout](#project-layout)
+15. [Tests](#tests)
+16. [Known limitations](#known-limitations)
+17. [Troubleshooting](#troubleshooting)
+18. [Design decisions and trade-offs](#design-decisions-and-trade-offs)
+19. [License](#license)
 
 ---
 
@@ -63,76 +70,76 @@ LLM-agent framework. It is one reproducible command on a laptop or workstation.
 ## Architecture
 
 ```text
-                     ┌──────────────────────┐
-                     │  Typer CLI            │
-                     │  run / generate /     │
-                     │  report / list-models │
-                     └──────────┬───────────┘
-                                │  YAML + CLI overrides
-                     ┌──────────▼───────────┐
-                     │ Pydantic RunConfig    │
-                     │ + config.snapshot     │
-                     └──────────┬───────────┘
-                                │
-          ┌─────────────────────┼──────────────────────┐
-          │                     │                      │
- ┌────────▼────────┐   ┌────────▼─────────┐   ┌────────▼──────────┐
- │ Document loader  │   │ Chunker          │   │ Eval-set provider │
- │ txt/md/pdf/docx  │   │ fixed/sentence/  │   │ JSONL or Ollama   │
- │ html             │   │ recursive        │   │ synthetic + filter│
- └────────┬────────┘   └────────┬─────────┘   └────────┬──────────┘
-          └─────────────────────┼──────────────────────┘
-                                │
-                     ┌──────────▼────────────┐
-                     │ Benchmark orchestrator │
-                     │ per model:             │
-                     │  backend.load()        │
-                     │  tokenize + cache      │
-                     │  embed in batches      │
-                     │  build FAISS index     │
-                     │  run every query       │
-                     │  sample RAM/VRAM       │
-                     └──────────┬────────────┘
-                                │
-          ┌─────────────────────┼───────────────────────┐
-          │                     │                       │
- ┌────────▼────────┐   ┌────────▼─────────┐   ┌─────────▼────────┐
- │ Metrics          │   │ Timings/resources │   │ Cost + cache      │
- │ Recall/Precision │   │ p50/p95/p99, cold │   │ tokens, index MB, │
- │ MRR/nDCG/Hit     │   │ warm, RAM, VRAM   │   │ hosted equivalent │
- └────────┬─────────┘   └────────┬─────────┘   └─────────┬────────┘
-          └─────────────────────┼───────────────────────┘
-                                │
-          ┌─────────────────────┼──────────────────────────────┐
-          │                     │                              │
- ┌────────▼────────┐   ┌────────▼─────────┐          ┌─────────▼─────────┐
- │ Rich console     │   │ results.json      │          │ report.html        │
- │ summary tables   │   │ results.csv       │          │ self-contained     │
- │ recommendation   │   │ queries.csv       │          │ SVG charts, no CDN │
- └──────────────────┘   └──────────────────┘          └────────────────────┘
+                    ┌───────────────────────────────┐
+                    │ Typer CLI                     │
+                    │ run · bench · stress · report │
+                    │ generate-evalset · providers  │
+                    └───────────────┬───────────────┘
+                                    │
+             ┌──────────────────────┼───────────────────────┐
+             │                      │                       │
+   ┌─────────▼─────────┐  ┌─────────▼──────────┐  ┌─────────▼─────────┐
+   │ Python API         │  │ Pydantic RunConfig │  │ Dataset loaders    │
+   │ Evaluator,         │  │ + snapshot         │  │ docs+evalset,      │
+   │ StressRunner       │  │                    │  │ JSONL              │
+   └─────────┬─────────┘  └─────────────────────┘  └─────────┬─────────┘
+             │                                               │
+             └──────────────────────┬────────────────────────┘
+                                    │
+                       ┌────────────▼─────────────┐
+                       │ RetrievalDataset          │
+                       │ documents + queries +     │
+                       │ relevance (group aware)   │
+                       └────────────┬─────────────┘
+                                    │
+           ┌────────────────────────┼─────────────────────────┐
+           │                        │                         │
+ ┌─────────▼─────────┐   ┌──────────▼─────────┐    ┌──────────▼─────────┐
+ │ Models             │   │ Evaluator           │    │ Stress generators  │
+ │ BaseEmbeddingModel │   │ embed → index →     │    │ needle-in-haystack │
+ │ ollama · hf ·      │   │ query → measure     │    │ chunk-size sweep   │
+ │ openai · cohere ·  │   │ latency · memory ·  │    │ query noise        │
+ │ voyage (+plugins)  │   │ tokens · cost       │    │                    │
+ └─────────┬─────────┘   └──────────┬──────────┘    └──────────┬─────────┘
+           │                        │                          │
+           │              ┌─────────▼──────────┐               │
+           └──────────────► metrics.py          ◄──────────────┘
+                          │ scalar + vectorised │
+                          │ P/R/MRR/nDCG/Hit    │
+                          │ latency/QPS/mem/cost│
+                          └─────────┬──────────┘
+                                    │
+     ┌──────────────────────────────┼───────────────────────────────┐
+     │                              │                               │
+┌────▼─────────────┐   ┌────────────▼───────────┐   ┌───────────────▼────┐
+│ Rich console      │   │ results.json           │   │ results.md          │
+│ comparison table  │   │ summary.csv            │   │ latency-vs-quality  │
+│ recommendation    │   │ queries.csv            │   │ quality-bars PNG    │
+└───────────────────┘   └────────────────────────┘   └─────────────────────┘
 ```
 
 Mermaid version:
 
 ```mermaid
 flowchart LR
-  CLI[Typer CLI] --> CFG[Pydantic config + snapshot]
+  CLI[Typer CLI] --> API[Evaluator / StressRunner]
+  CLI --> CFG[RunConfig + snapshot]
   CFG --> ING[Ingest txt/md/pdf/docx/html]
-  ING --> CHK[Chunk: fixed / sentence / recursive]
-  CHK --> ES[Eval set: JSONL or Ollama-generated + filters]
-  CHK --> RUN[Benchmark orchestrator]
-  ES --> RUN
-  RUN --> BE[EmbeddingBackend<br/>Ollama or sentence-transformers]
-  BE --> CACHE[(SQLite embedding cache)]
-  BE --> IDX[FAISS flat cosine index]
-  IDX --> Q[Run all queries, top-k]
-  Q --> MET[Metrics + latency + tokens + memory]
-  MET --> REPORTS[Rich / JSON / CSV / HTML]
+  ING --> DS[RetrievalDataset]
+  GEN[Needle / chunk / noise generators] --> DS
+  DS --> EV[Evaluator]
+  EV --> MODELS[BaseEmbeddingModel<br/>ollama · hf · openai · cohere · voyage]
+  MODELS --> IDX[Cosine index: FAISS or NumPy]
+  IDX --> Q[Answer queries, top-k]
+  Q --> MET[metrics.py: P/R/MRR/nDCG/Hit<br/>latency · QPS · memory · cost]
+  MET --> REPORTS[Rich / JSON / CSV / MD / PNG]
 ```
 
-A backend is a small class implementing `load()` and `_embed_prepared()`. Batching,
-prefixes, validation and L2 normalization live in the base class, so a new provider is
-typically under 30 lines.
+A provider is a small class: set `provider_name`, implement `load()` and
+`_embed_prepared()`, register it with `register_model`. Batching, instruction prefixes,
+validation, L2 normalisation, async fan-out and cost metadata live in
+:class:`embedbench.models.BaseEmbeddingModel`, so a new provider is typically under 30
+lines.
 
 ---
 
@@ -141,37 +148,46 @@ typically under 30 lines.
 Requirements:
 
 - Python **3.10+**
-- A local machine with enough RAM for your chosen model
-- Optional: [Ollama](https://ollama.com/) for Ollama models and synthetic question generation
-- For PDFs/DOCX/HTML: `pypdf`, `python-docx`, `beautifulsoup4` (installed with the package)
+- Enough RAM for your chosen local model
+- Optional: [Ollama](https://ollama.com/) for Ollama models and synthetic questions
+- For PDF/DOCX parsing: `pip install "embedbench[docs]"` (not needed for txt/md/html)
 
-From this repository:
+```bash
+pip install embedbench                 # Ollama + core metrics
+pip install "embedbench[local]"        # + sentence-transformers / Hugging Face
+pip install "embedbench[openai]"       # + OpenAI SDK and tiktoken
+pip install "embedbench[cohere]"       # + Cohere SDK
+pip install "embedbench[voyage]"       # + Voyage AI SDK
+pip install "embedbench[faiss]"        # + FAISS (NumPy fallback otherwise)
+pip install "embedbench[plots]"        # + matplotlib comparison plots
+pip install "embedbench[docs]"         # + pypdf and python-docx
+pip install "embedbench[all]"          # everything above
+```
+
+The core install is deliberately small: NumPy, Typer, Rich, Pydantic, PyYAML, Requests,
+psutil and BeautifulSoup. Cloud SDKs, PyTorch, FAISS and matplotlib are opt-in extras, so
+`pip install embedbench` never downloads a deep-learning stack you do not use.
+
+From a checkout of this repository:
 
 ```bash
 python -m venv .venv
-
-# macOS / Linux
-source .venv/bin/activate
-# Windows PowerShell / cmd
-# .venv\Scripts\activate
-
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -e ".[dev]"
 ```
-
-The base install includes `sentence-transformers` and `faiss-cpu`, so it downloads a
-CPU PyTorch build and can be a few hundred MB. If you only use Ollama, the heavy
-libraries are imported lazily and never loaded.
 
 Check the CLI:
 
 ```bash
 embedbench --help
+embedbench providers
 embedbench list-models
 ```
 
-`list-models` shows a curated catalog and marks which Ollama models are installed.
-Hugging Face models are downloaded on first use.
+`providers` lists every registered provider, the extra it needs, its API-key variable and
+the hosted-model price table. `list-models` shows a curated catalogue and which Ollama
+models are installed.
 
 ### Ollama
 
@@ -190,9 +206,9 @@ names you use with `ollama run`, for example `nomic-embed-text`,
 
 ### Hugging Face
 
-Any sentence-transformers compatible model works:
-
 ```bash
+pip install "embedbench[local]"
+
 embedbench run \
   --config examples/config.yaml \
   --models hf:BAAI/bge-small-en-v1.5,hf:all-MiniLM-L6-v2
@@ -200,6 +216,24 @@ embedbench run \
 
 The first run downloads model weights to the Hugging Face cache. Gated models require
 accepting the model license and `huggingface-cli login`. No key is bundled with this tool.
+
+### Hosted providers
+
+Set the provider's environment variable, then use the `provider:model` spec:
+
+```bash
+export OPENAI_API_KEY=...
+export COHERE_API_KEY=...
+export VOYAGE_API_KEY=...
+
+embedbench bench --demo --models openai:text-embedding-3-small
+embedbench bench --demo --models cohere:embed-english-v3.0,voyage:voyage-3-large
+```
+
+Keys can also be supplied with `backends.<provider>.api_key` in YAML or a `--option`
+flag; environment variables are preferred so secrets stay out of config files. Set
+`backends.openai.base_url` (or the `base_url` model option) to target any
+OpenAI-compatible endpoint such as vLLM, LM Studio or an Azure gateway.
 
 ---
 
@@ -295,11 +329,134 @@ python -m venv .venv
 source .venv/bin/activate               # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -e ".[dev]"
+embedbench providers
 embedbench list-models
 embedbench run --config examples/config.yaml --no-progress
+embedbench bench --docs examples/docs --evalset examples/evalset.jsonl \
+  --models ollama:nomic-embed-text --k 1,5,10 --no-plots
 embedbench report --results examples/results --priority speed
 pytest
 ```
+
+---
+
+## Python API
+
+Everything the CLI does is available as a library. The smallest useful program:
+
+```python
+from embedbench import Evaluator, demo_dataset, write_reports
+
+dataset = demo_dataset()  # or load_corpus_dataset("./docs", "evalset.jsonl")
+
+result = Evaluator(
+    ["ollama:nomic-embed-text", "openai:text-embedding-3-small"],
+    k_values=(1, 5, 10),
+).evaluate(dataset)
+
+print(result.best().spec)                 # highest nDCG@10
+print(result.models[0].metrics_at(10))    # hit_rate/mrr/ndcg/precision/recall
+print(result.models[0].cost)              # tokens, list price, estimated USD
+
+write_reports(result, "results/", plots=True)
+```
+
+`Evaluator.evaluate()` returns a `BenchmarkResult` with one `ModelResult` per model:
+
+| Field | Contents |
+| --- | --- |
+| `metrics_by_k` | mean hit rate, MRR, nDCG, precision and recall per cut-off |
+| `latency`, `latency_warm` | count, mean, min, max, p50/p90/p95/p99, QPS |
+| `throughput` | documents per second and queries per second |
+| `tokens`, `cost` | document/query tokens, list price, estimated USD |
+| `memory` | vector bytes, index size, peak RSS and VRAM |
+| `timings` | load, token counting, embedding, index build, queries |
+| `per_query` | ranked documents, scores, latency and metrics per query |
+
+Useful helpers:
+
+```python
+from embedbench import (
+    DatasetDocument, RetrievalDataset, RetrievalQuery,   # build a dataset by hand
+    load_jsonl_dataset, load_corpus_dataset,             # load one from disk
+    needle_in_haystack, chunk_size_sensitivity,          # synthetic workloads
+    query_variants, StressRunner,                        # robustness sweeps
+    render_console, render_markdown,                      # reporting
+    create_model, register_model, BaseEmbeddingModel,     # providers
+    ndcg_at_k, evaluate_rankings, latency_stats, estimate_cost,
+)
+```
+
+Build a dataset in code:
+
+```python
+dataset = RetrievalDataset(
+    name="support",
+    documents=[
+        DatasetDocument("billing", "Failed charges are retried on days 1, 3 and 7."),
+        DatasetDocument("keys", "API keys expire after ninety days."),
+    ],
+    queries=[
+        RetrievalQuery("q1", "How often are failed charges retried?", ("billing",)),
+        RetrievalQuery("q2", "When do API keys expire?", ("keys",)),
+    ],
+)
+dataset.validate()
+
+result = Evaluator(["ollama:nomic-embed-text"], k_values=(1, 2)).evaluate(dataset)
+```
+
+Evaluation is one model at a time for comparable latency, and every model sees the same
+documents, queries and cut-offs. A failing provider never aborts the run: it is recorded
+with `status="error"` and the other models still produce a report.
+
+## Stress workloads
+
+Three workloads answer the questions a generic leaderboard cannot:
+
+| Workload | Question | Generator |
+| --- | --- | --- |
+| Needle in a haystack | Can one fact survive a 2k, 8k or 32k token context, at the start, middle or end? | `needle_in_haystack()` |
+| Chunk-size sensitivity | How much quality does 128 vs 256 vs 512 vs 1024 token chunking cost? | `chunk_size_sensitivity()` |
+| Query robustness | How far does nDCG fall under typos, truncation, shuffling or paraphrasing? | `query_variants()` |
+
+They run from the CLI:
+
+```bash
+# Synthetic haystacks: 2k/8k/32k tokens, needles at 0%, 50% and 100% depth.
+embedbench stress needle \
+  --models ollama:nomic-embed-text \
+  --context-sizes 2048,8192,32768 \
+  --depths 0,0.5,1
+
+# Re-chunk the same corpus and compare quality.
+embedbench stress chunk-size \
+  --docs ./docs --evalset evalset.jsonl \
+  --models ollama:nomic-embed-text \
+  --chunk-sizes 128,256,512,1024
+
+# Degrade the queries, keep the index fixed.
+embedbench stress noisy \
+  --docs ./docs --evalset evalset.jsonl \
+  --models ollama:nomic-embed-text \
+  --noise typo,case,truncate,shuffle,paraphrase
+```
+
+Each command writes `<workload>.json` and `<workload>.md` (default `results/stress/`),
+including a depth breakdown for needles and a delta-versus-clean table for noise.
+From Python, use `StressRunner`:
+
+```python
+from embedbench import StressRunner, demo_dataset
+
+runner = StressRunner(["ollama:nomic-embed-text"], k_values=(1, 5))
+needle = runner.needle_in_haystack(context_sizes=(2048, 8192), depths=(0.0, 0.5, 1.0))
+noise = runner.query_robustness(demo_dataset(), kinds=("typo", "paraphrase"))
+print(needle.markdown())
+```
+
+All generators are deterministic for a given `--seed`, so a regression is a real
+regression rather than a lucky shuffle.
 
 ---
 
@@ -397,6 +554,77 @@ embedbench list-models [OPTIONS]
 Lists curated Hugging Face and Ollama models, dimensions, notes, whether Ollama is
 reachable, and which Ollama models are installed. It does not download or ping Hugging
 Face. `--json` is suitable for scripting.
+
+### `embedbench bench`
+
+```text
+embedbench bench [OPTIONS]
+
+  --models, -m TEXT         Comma-separated provider:model specs (required)
+  --docs, -d PATH           Documents folder to chunk and index
+  --evalset PATH            JSONL eval set with queries and relevant_doc_ids
+  --dataset PATH            JSONL dataset (documents + queries) to evaluate directly
+  --demo                    Use the built-in demo dataset
+  --k TEXT                  Comma-separated cut-offs (default: 1,5,10)
+  --output-dir, -o PATH     results.json/.md/.csv and plots (default: results)
+  --priority TEXT           accuracy | speed | balanced | cost
+  --index TEXT              auto | faiss | numpy
+  --seed INT                Global seed
+  --batch-size INT          Override the embedding batch size
+  --save-dataset PATH       Write the resolved dataset as JSONL
+  --plugins TEXT            Modules or .py files registering custom providers
+  --plots/--no-plots        Render PNG comparisons when matplotlib is installed
+  --config, -c PATH         YAML config for ingestion/chunking defaults
+  --progress/--no-progress
+  --verbose, -v
+```
+
+Dataset-based evaluation. Choose exactly one source: `--demo`, `--dataset FILE`, or
+`--docs` plus `--evalset`. Artifacts in `--output-dir`:
+
+| File | Contents |
+| --- | --- |
+| `results.json` | full schema-2.0 report with per-query records and recommendation |
+| `results.md` | Markdown summary: quality, efficiency, recommendation, worst queries |
+| `summary.csv` | one row per model with quality, latency, memory and cost |
+| `queries.csv` | one row per query and model |
+| `latency-vs-quality.png` | p95 latency against nDCG (needs `[plots]`) |
+| `quality-bars.png` | hit rate / MRR / nDCG bars (needs `[plots]`) |
+| `cost-vs-quality.png` | estimated USD against nDCG (needs `[plots]`, ≥2 priced models) |
+
+Exit code `1` when every model failed; partial failures still write artifacts and exit
+`0` so CI can compare what succeeded.
+
+### `embedbench stress needle|chunk-size|noisy`
+
+```text
+embedbench stress needle [OPTIONS]
+  --models, -m TEXT         Comma-separated provider:model specs (required)
+  --context-sizes TEXT      Haystack sizes in tokens (default: 2048,8192,32768)
+  --depths TEXT             Insertion depths 0..1 (default: 0,0.5,1)
+  --chunk-size INT          Chunk size in characters (default: 800)
+  --k TEXT                  Cut-offs (default: 1,5,10)
+  --output-dir, -o PATH     Writes needle.json and needle.md
+  --seed INT                Seed for filler and needle codes
+  --index TEXT              auto | faiss | numpy
+  --plugins TEXT            Custom provider modules
+  --verbose, -v
+```
+
+`stress chunk-size` takes `--docs`/`--evalset` plus `--chunk-sizes 128,256,512,1024`;
+`stress noisy` takes `--docs`/`--evalset` plus `--noise typo,case,truncate,shuffle,paraphrase`.
+Both write `<workload>.json` and `<workload>.md` under `results/stress/`.
+
+### `embedbench providers`
+
+```text
+embedbench providers [--json]
+```
+
+Lists registered providers with the install extra, API-key environment variable and
+price, followed by the hosted-model list-price table. Prices are indicative; override
+them per model with the `price_per_1m_tokens` option or `backends.extra`. `--json` emits
+the same data for scripts.
 
 ---
 
@@ -558,8 +786,23 @@ an LLM judge; review generated sets before treating them as ground truth.
 | `max_seq_length` | `null` | Tokenizer/model truncation length. |
 | `query_prefix` / `document_prefix` | `null` | Overrides; E5 model names automatically get `query: ` / `passage: ` unless set. |
 
-`backends.extra` holds free-form options for third-party backends. The base class reads
-`batch_size`, `query_prefix` and `document_prefix`; the backend can read anything else.
+`backends.openai`, `backends.cohere` and `backends.voyage` share one schema:
+
+| Key | Default | Notes |
+| --- | --- | --- |
+| `api_key` | `null` | Prefer `OPENAI_API_KEY` / `COHERE_API_KEY` / `VOYAGE_API_KEY`. |
+| `base_url` | `null` | Point at vLLM, LM Studio, Azure or a proxy (OpenAI-compatible). |
+| `batch_size` | `32` | Inputs per SDK call (further split by provider limits). |
+| `dimensions` | `null` | Output-dimension reduction where the provider supports it. |
+| `timeout_s` | `120` | Per-request timeout. |
+| `max_retries` | `3` | Retries on 408/409/425/429/5xx, with exponential backoff. |
+| `retry_backoff_s` | `0.75` | Base backoff delay. |
+| `max_concurrency` | `4` | Concurrent batches in the async path. |
+| `query_prefix` / `document_prefix` | `null` | Instruction prefixes for your model. |
+
+`backends.extra` holds free-form options for third-party providers. The base class reads
+`batch_size`, `query_prefix`, `document_prefix`, `normalize`, `price_per_1m_tokens` and
+`max_concurrency`; the provider can read anything else.
 
 ### Cache and report
 
@@ -654,11 +897,14 @@ find the right source?”.
 
 - **HF token counts** use the model's own tokenizer, including any query/document prefix,
   truncated to the model's `max_seq_length`.
+- **Hosted token counts** use `tiktoken` when the OpenAI extra is installed (exact for
+  OpenAI models, approximate for others), otherwise the same heuristic as Ollama.
 - **Ollama token counts** are estimates (words + punctuation) because the Ollama REST API
   does not expose the model tokenizer. Reports mark these with `*` and
   `tokens.estimated: true`.
-- **Cost-equivalent** = `total_tokens / 1,000,000 × cost_per_1m_tokens`. It is a
-  comparison aid, not a bill. Configure the hosted price you actually care about.
+- **Cost** is `total_tokens / 1,000,000 × price_per_1m_tokens`. For `run` the price comes
+  from `report.cost_per_1m_tokens`; for `bench` it is the provider's list price (or your
+  `price_per_1m_tokens` override). It is a comparison aid, not a bill.
 - **RAM peak** is process RSS sampled every 50 ms (PSUtil). It includes the model for HF.
   For Ollama the model lives in the server process, so `model_resident_mb` and VRAM come
   from `/api/ps` and are resident sizes, not sampled peaks.
@@ -679,6 +925,26 @@ Three answers are computed, regardless of the selected priority:
 The selected priority comes from `report.priority`, `--priority`, or the report command.
 Scores are relative to the models and corpus in that run; they are not absolute quality
 scores and cannot be compared across runs without care.
+
+### `bench` versus `run`
+
+Both commands share the same metric definitions and the same exact-cosine retrieval, but
+they answer different questions:
+
+| | `embedbench run` | `embedbench bench` |
+| --- | --- | --- |
+| Input | docs folder + eval set, chunked by config | dataset: docs+eval set, JSONL, or `--demo` |
+| Cut-offs | one `top_k` | several (`--k 1,5,10`) |
+| Cache | SQLite embedding cache | none (measures the provider) |
+| Cost | one `cost_per_1m_tokens` | per-model list price from `providers` |
+| Artifacts | JSON/CSV/HTML + config snapshot | JSON/Markdown/CSV + PNG plots |
+| Priorities | accuracy / speed / balanced | accuracy / speed / balanced / cost |
+
+The evaluator's recommendation uses min-max normalisation across the successful models
+with these weights: accuracy `0.80/0.15/0.05`, speed `0.20/0.75/0.05`, balanced
+`0.55/0.30/0.15`, cost `0.30/0.10/0.60`. Unknown prices score neutrally (`0.5`); free
+local models score `1.0` on cost. Every component is reported next to the score so you
+can see why a model won.
 
 ### Report files
 
@@ -741,43 +1007,43 @@ On a real corpus you can expect different accuracy trade-offs.
 
 ---
 
-## Adding a custom backend
+## Adding a custom provider
 
-A backend only needs `load()` and `_embed_prepared()`. The base class handles formatting
-prefixes, text validation, row/dimension checks, finiteness checks and L2 normalization.
-The benchmark runner batches calls to `batch_size`.
+A provider only needs `load()` and `_embed_prepared()`. The base class handles instruction
+prefixes, text validation, row/dimension checks, finiteness checks, L2 normalisation,
+batching and the async fan-out.
 
-Create `my_backend.py`:
+Create `my_provider.py`:
 
 ```python
 from __future__ import annotations
 
 import numpy as np
 
-from embedbench.backends import register_backend
-from embedbench.backends.base import EmbeddingBackend
+from embedbench.models import BaseEmbeddingModel, register_model
 
 
-@register_backend("constant")
-class ConstantBackend(EmbeddingBackend):
-    """A deliberately simple backend; replace the vector with your provider call."""
+@register_model("constant")
+class ConstantModel(BaseEmbeddingModel):
+    """A deliberately simple provider; replace the vector with your API call."""
 
-    backend_name = "constant"
+    provider_name = "constant"
+    default_price_usd_per_1m = None   # set 0.0 for free local models
 
     def load(self) -> None:
         self.embedding_dimension = 8
 
-    def _embed_prepared(self, texts: list[str]) -> np.ndarray:
+    def _embed_prepared(self, texts, kind="document"):
         return np.ones((len(texts), self.embedding_dimension), dtype=np.float32)
 ```
 
-Point a config at it and run:
+Use it with the file-based pipeline:
 
 ```yaml
 # constant.yaml
 docs: ./examples/docs
 models: [constant:demo]
-plugins: [./my_backend.py]     # or an importable dotted module name
+plugins: [./my_provider.py]     # or an importable dotted module name
 
 backends:
   extra:
@@ -789,46 +1055,58 @@ backends:
 embedbench run --config constant.yaml --evalset examples/evalset.jsonl --top-k 3
 ```
 
+Or with the evaluator, loading the file directly:
+
+```bash
+embedbench bench --demo --models constant:demo --plugins ./my_provider.py
+```
+
 Notes:
 
 - `plugins` entries are either dotted modules or paths to standalone `.py` files
   (resolved from the current working directory). For multi-file plugins, install the
   package or put it on `PYTHONPATH` and use a dotted module name.
-- Backends can override `count_tokens()`, `runtime_metadata()`, `close()`,
+- Providers can override `count_tokens()`, `runtime_metadata()`, `close()`,
   `reset_peak_memory()` and `cache_namespace`. The default token counter is a documented
-  heuristic.
+  heuristic; cloud providers use `tiktoken` when they can.
 - If your provider needs prefixes, pass `query_prefix`/`document_prefix` in
   `backends.extra`, or override `prepare_queries`/`prepare_documents`.
+- `kind` is `"document"` or `"query"`; Cohere and Voyage use it to pick their input type.
 - For distribution, expose an entry point:
   ```toml
-  [project.entry-points."embedbench.backends"]
-  mybackend = "my_package.backend:MyBackend"
+  [project.entry-points."embedbench.models"]
+  constant = "my_package.provider:ConstantModel"
   ```
-  The entry point name is the registry name used in `models`.
+  The entry point name is the registry name used in `provider:model` specs. The legacy
+  `embedbench.backends` group is still loaded for compatibility.
 
-The interface is intentionally small: `load`, embedding, optional token counting and
-metadata. There is no service framework to learn.
+The interface is intentionally small: load, embed, optional token counting and metadata.
+There is no service framework to learn.
 
 ---
 
 ## Reproducibility and caching
 
 Every run writes `config.snapshot.yaml`, environment versions, platform, CPU/RAM, seed,
-corpus stats and the full JSONL examples used. Seeds are applied to Python/NumPy and to
-synthetic sampling. LLM calls use `temperature` and per-attempt seeds.
+corpus stats and the full JSONL examples used. Dataset-based runs embed the dataset name,
+its statistics and generator settings in `results.json`. Seeds are applied to Python and
+NumPy before each model, and every generator (`needle_in_haystack`,
+`chunk_size_sensitivity`, `query_variants`) is deterministic for a given seed. LLM calls
+use `temperature` and per-attempt seeds.
 
 Embedding results are cached in SQLite under
 `.embedbench_cache/embeddings.sqlite3` by default:
 
 ```text
-cache key = (backend namespace, SHA-256(raw chunk text))
-namespace = backend + model + prefix instructions + backend-specific identity
+cache key = (model namespace, SHA-256(raw chunk text))
+namespace = provider + model + prefixes + normalisation + provider-specific identity
 ```
 
 The cache stores float32 vectors and text hashes, not the raw chunk text. It never caches
 query embeddings, and it is keyed by model, not by corpus path, so moving a corpus keeps
 the cache useful. Changing prefixes, HF `max_seq_length`, or the Ollama host produces a
-new namespace.
+new namespace. `embedbench bench` and the stress commands do not use the SQLite cache,
+so their latency numbers measure the provider rather than local disk.
 
 To force a cold run:
 
@@ -847,45 +1125,55 @@ frequency, thermal throttling, other processes and whether the model was just lo
 
 ```text
 embedbench/
-├── embedbench/
-│   ├── __init__.py
+├── src/embedbench/
+│   ├── __init__.py             # public API: Evaluator, datasets, metrics, reporters
 │   ├── __main__.py
-│   ├── cli.py                 # Typer commands and CLI overrides
-│   ├── config.py              # Pydantic config, YAML loading, snapshots
+│   ├── cli.py                  # Typer commands, bench/stress/providers
+│   ├── evaluator.py            # Evaluator, BenchmarkResult, recommendations
+│   ├── datasets.py             # RetrievalDataset + needle/chunk/noise generators
+│   ├── stress.py               # StressRunner and StressReport
+│   ├── metrics.py              # scalar + vectorised retrieval, latency, cost, memory
+│   ├── reporter.py             # Rich, Markdown, CSV, JSON, plots
+│   ├── models/
+│   │   ├── __init__.py         # registry, factory, plugins, pricing catalogue
+│   │   ├── base.py             # BaseEmbeddingModel contract
+│   │   ├── local.py            # Ollama and sentence-transformers providers
+│   │   └── providers.py        # OpenAI, Cohere, Voyage (+ list pricing)
+│   ├── backends/               # 0.1.x compatibility shim (imports from models)
+│   ├── schemas.py              # Document, Chunk, EvalExample, ModelSpec, tokens
+│   ├── config.py               # Pydantic config, YAML loading, snapshots
+│   ├── ingest.py               # discovery + txt/md/pdf/docx/html loaders
+│   ├── chunking.py             # fixed / sentence / recursive chunkers
+│   ├── evalset.py              # JSONL validation + Ollama question generation
+│   ├── ollama_client.py        # retries, timeouts, legacy embed fallback
+│   ├── cache.py                # SQLite embedding cache (file-based pipeline)
+│   ├── index.py                # FAISS flat cosine + NumPy fallback
+│   ├── resources.py            # RAM sampling and environment metadata
+│   ├── catalog.py              # curated local model list + Ollama inventory
+│   ├── benchmark.py            # file-based orchestrator behind `run`
+│   ├── report.py               # HTML report and console summary for `run`
+│   ├── py.typed
 │   ├── errors.py
 │   ├── logging_utils.py
-│   ├── models.py              # Document, Chunk, EvalExample, ModelSpec, tokens
-│   ├── utils.py               # hashing, atomic writes, seeds, percentiles
-│   ├── ingest.py              # discovery + txt/md/pdf/docx/html loaders
-│   ├── chunking.py            # fixed / sentence / recursive chunkers
-│   ├── evalset.py             # JSONL validation + Ollama question generation
-│   ├── ollama_client.py       # retries, timeouts, legacy embed fallback
-│   ├── cache.py               # SQLite embedding cache
-│   ├── index.py               # FAISS flat cosine + NumPy fallback
-│   ├── metrics.py             # Recall/Precision/MRR/nDCG/Hit
-│   ├── resources.py           # RAM sampling and environment metadata
-│   ├── catalog.py             # curated model list + Ollama inventory
-│   ├── benchmark.py           # orchestrator
-│   ├── report.py              # Rich, JSON/CSV, recommendations, HTML
-│   ├── py.typed
-│   └── backends/
-│       ├── __init__.py
-│       ├── base.py            # EmbeddingBackend interface
-│       ├── hf.py              # sentence-transformers backend
-│       ├── ollama.py          # Ollama REST backend
-│       └── registry.py        # registration, plugins, entry points, factory
+│   └── utils.py                # hashing, atomic writes, seeds, percentiles
+├── .github/workflows/ci.yml    # lint + tests (3.10-3.13) + wheel build
 ├── examples/
 │   ├── config.yaml
 │   ├── evalset.jsonl
-│   └── docs/                  # sample overview/install/API/billing/security/errors
+│   └── docs/                   # sample overview/install/API/billing/security/errors
 ├── tests/
 │   ├── conftest.py
-│   ├── fake_backend.py        # deterministic hashing backend for tests
-│   ├── test_backends.py
+│   ├── fake_backend.py         # deterministic hashing provider for tests
+│   ├── test_datasets.py
+│   ├── test_evaluator.py
+│   ├── test_models.py
+│   ├── test_metrics.py
+│   ├── test_reporter.py
+│   ├── test_stress.py
+│   ├── test_ollama_client.py
 │   ├── test_chunking.py
 │   ├── test_evalset.py
 │   ├── test_ingest.py
-│   ├── test_metrics.py
 │   ├── test_report.py
 │   └── test_smoke.py
 ├── pyproject.toml
@@ -902,28 +1190,33 @@ embedbench/
 pip install -e ".[dev]"
 pytest
 pytest --cov=embedbench --cov-report=term-missing
+ruff check src tests && ruff format --check src tests
 ```
 
 The suite runs offline:
 
-- Chunkers: fixed windows, overlap, sentence boundaries, recursive packing, coverage,
-  validation, short-document fallback and determinism.
-- Metrics: hand-computed Recall/Precision/MRR/nDCG/Hit, deduplication, missing results,
-  k validation and aggregation.
-- Backends: interface prefixes/normalization/validation, registry, plugin loading,
-  Ollama retries/timeouts/legacy fallback/missing models, mocked sentence-transformers
-  and tokenizer counts.
-- Ingestion: Markdown/HTML/TXT, real DOCX, mocked PDF, filters, binary files and empty
-  corpora.
-- Evalsets: valid/invalid JSONL, IDs, metadata, question parsing, vague/duplicate filters
-  and deterministic chunk sampling.
-- Report: recommendation changes with priority, XSS/script-breakout escaping, standalone
-  HTML, CSV/JSON artifacts.
-- Smoke: CLI end-to-end with a tiny corpus, warm cache, report command, a failing model
-  alongside a successful one, and the mocked `generate-evalset` command.
+- Metrics: hand-computed Recall/Precision/MRR/nDCG/Hit, duplicate collapse, empty and
+  single-result edge cases, k validation, aggregation; vectorised batch results checked
+  against the scalar functions for every metric and cut-off; latency percentiles, QPS,
+  memory footprint and cost arithmetic.
+- Datasets: validation errors, chunk grouping, JSONL round-trips, corpus loading,
+  needle placement and containment, chunk-size sweeps, deterministic query degradation.
+- Evaluator: quality/latency/memory/cost capture, per-query consistency, JSON schema,
+  failure isolation between models, recommendation weighting per priority.
+- Models: base-contract prefixes/batching/normalisation/validation, registry, plugin
+  loading, Ollama retries and missing models, mocked sentence-transformers and tokenizer
+  counts, and OpenAI/Cohere/Voyage batching, input types, pricing, retries and missing
+  SDK/key errors using fake SDK modules.
+- Stress: needle depth breakdowns, chunk-size cells, query-noise deltas, failure cells
+  and artifact writing.
+- Reporter: Markdown/CSV/JSON output, console tables, and graceful plot degradation
+  without matplotlib.
+- Legacy pipeline: chunkers, ingestion (Markdown/HTML/TXT, real DOCX, mocked PDF),
+  eval sets, HTML report escaping, CLI end-to-end with cache, and a failing model
+  alongside a successful one.
 
-No Ollama server or Hugging Face download is required for the tests; the fake hashing
-backend exercises the real cache, FAISS, metrics and report pipeline.
+No Ollama server, cloud key or Hugging Face download is required for the tests; the fake
+hashing provider exercises the real cache, FAISS, metrics and report pipeline.
 
 ---
 
@@ -931,6 +1224,13 @@ backend exercises the real cache, FAISS, metrics and report pipeline.
 
 - **Document-level relevance only.** `relevant_doc_ids` cannot point at a specific chunk.
   A document with many chunks gets one credit but can consume multiple top-k slots.
+- **Synthetic haystacks use estimated tokens.** Needle-in-a-haystack sizes are measured
+  with embedbench's word+punctuation heuristic (the same unit used for cost estimates),
+  not the model's tokenizer, so a "32k" haystack may be a few percent off from the
+  provider's own count. Relevance still points at the exact chunk containing the needle.
+- **Query noise is rule-based.** Typos, truncation, word shuffling and synonym swaps are
+  deterministic string transforms, not LLM paraphrases. They measure sensitivity to a
+  class of degradation, not human paraphrase quality.
 - **Synthetic questions are not verified.** Filters catch obvious vagueness and
   duplicates, but a local LLM can still write unanswerable or trivial questions. Review a
   sample and prefer your own JSONL for decisions.
@@ -953,9 +1253,10 @@ backend exercises the real cache, FAISS, metrics and report pipeline.
   DOCX tables are flattened to ` | `-separated text; complex layouts lose structure.
 - **HTML boilerplate removal is heuristic.** `nav`, `footer`, `script`, `style` and
   similar elements are removed, which could remove intentionally relevant text.
-- **Cost is one configured price.** A single `cost_per_1m_tokens` is applied to every
-  model; provider-specific prices, query/embedding price differences and discounts are
-  out of scope.
+- **Cost is list price, not your contract.** Hosted prices come from the built-in table
+  (override per model with `price_per_1m_tokens`); the file-based pipeline still applies
+  one `cost_per_1m_tokens` to every model. Query/embedding price differences, volume
+  discounts and cached-input pricing are out of scope.
 - **Cache freshness is manual.** The cache key includes model name and format-affecting
   options, but not a Hugging Face revision or a local weight file hash.
 - **Seeds do not guarantee bit-identical results** across hardware, PyTorch/FAISS

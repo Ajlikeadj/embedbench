@@ -4,10 +4,10 @@ import json
 from pathlib import Path
 
 import yaml
-from embedbench.cli import app
-from embedbench.ollama_client import OllamaClient
 from typer.testing import CliRunner
 
+from embedbench.cli import app
+from embedbench.ollama_client import OllamaClient
 from tests.fake_backend import FakeEmbeddingBackend  # noqa: F401 - registers backend
 
 
@@ -104,7 +104,14 @@ def test_end_to_end_cli_run_cache_report_and_failures(tmp_path: Path) -> None:
     )
     assert first.exit_code == 0, first.output + repr(first.exception)
 
-    for name in ("results.json", "results.csv", "queries.csv", "report.html", "config.snapshot.yaml", "run.log"):
+    for name in (
+        "results.json",
+        "results.csv",
+        "queries.csv",
+        "report.html",
+        "config.snapshot.yaml",
+        "run.log",
+    ):
         assert (results_dir / name).is_file(), name
 
     results = load_results(results_dir)
@@ -194,9 +201,7 @@ def test_end_to_end_cli_run_cache_report_and_failures(tmp_path: Path) -> None:
     assert "fake" in payload["backends"]
 
 
-def test_generate_evalset_cli_with_mocked_ollama(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_generate_evalset_cli_with_mocked_ollama(tmp_path: Path, monkeypatch) -> None:
     docs = tmp_path / "docs"
     docs.mkdir()
     (docs / "limits.md").write_text(
@@ -247,9 +252,7 @@ def test_generate_evalset_cli_with_mocked_ollama(
     assert records[0]["metadata"]["generator_model"] == "fake-llm"
 
 
-def test_auto_evalset_run_and_all_models_failing(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_auto_evalset_run_and_all_models_failing(tmp_path: Path, monkeypatch) -> None:
     docs = write_corpus(tmp_path)
     evalset = tmp_path / "evalset.jsonl"
     write_evalset(evalset)
@@ -275,7 +278,12 @@ def test_auto_evalset_run_and_all_models_failing(
         "models": ["fake:hash"],
         "top_k": 2,
         "output_dir": str(tmp_path / "auto"),
-        "chunking": {"strategy": "recursive", "chunk_size": 200, "chunk_overlap": 40, "min_chunk_chars": 40},
+        "chunking": {
+            "strategy": "recursive",
+            "chunk_size": 200,
+            "chunk_overlap": 40,
+            "min_chunk_chars": 40,
+        },
         "evalset": {
             "auto_generate": True,
             "max_chunks": 3,
